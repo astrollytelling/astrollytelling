@@ -1,0 +1,8 @@
+# MacOSX stuff
+.DS_Store
+**/.DS_Store
+
+# Webstorm stuff
+.idea/
+
+references/
