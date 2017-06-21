@@ -73,6 +73,12 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	console.log(data);
 
+	var phasesTicks = [];
+	_.uniq(data.phase).forEach(function(e){
+		phasesTicks.push(data.phase.indexOf(e));
+	 });
+	//phasesTicks.push(data.phase.length-1);
+
 	/* Slider */
 
 	// TODO: change domain to d3.range so that we get the index to make all other calculations easier
@@ -93,6 +99,27 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 			.on("start.interrupt", function() { slider.interrupt(); })
 			.on("start drag", function() { plotStar(data, Math.round(xSlider.invert(d3.event.x)));
 				handle.attr("cx", xSlider(xSlider.invert(d3.event.x))); }));
+
+	slider.append("g")
+		.selectAll("line")
+		.data(phasesTicks)
+		.enter().append("line")
+		.attr("class", "track-ticks")
+		.attr("x1", function(d){ return xSlider(d);})
+		.attr("x2", function(d){ return xSlider(d);})
+		.attr("y1", 0)
+		.attr("y2", 5);
+
+	slider.insert("g", ".track-overlay")
+		.attr("class", "ticks")
+		.attr("transform", "translate(0," + 18 + ")")
+		.selectAll("text")
+		.data(phasesTicks)
+		.enter().append("text")
+		.attr("x", function(d){ return xSlider(d);})
+		.attr("text-anchor", "middle")
+		.text(function(d, idx) { return getPhaseLabel(idx); });
+
 
 	/* HR diagram */
 
@@ -136,4 +163,23 @@ function plotStar(data, idx){
 		.attr("cx", function(d){ return x(data.log_Teff[d])})
 		.attr("cy", function(d){ return y(data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])});
+}
+
+function getPhaseLabel(phase){
+	switch(phase) {
+		case 0:
+			return "PMS";
+		case 1:
+			return "MS";
+		case 2:
+			return "SGB+RGB";
+		case 3:
+			return "CHeB";
+		case 4:
+			return "EAGB";
+		case 5:
+			return "TPAGB";
+		case 6:
+			return "post-AGB+WDCS";
+	}
 }

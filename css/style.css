@@ -141,12 +141,12 @@ circle.hidden-circle {
 .track {
   stroke: #000;
   stroke-opacity: 0.3;
-  stroke-width: 10px;
+  stroke-width: 2px;
 }
 
 .track-inset {
   stroke: #ddd;
-  stroke-width: 8px;
+  stroke-width: 1px;
 }
 
 .track-overlay {
@@ -154,6 +154,12 @@ circle.hidden-circle {
   stroke-width: 50px;
   stroke: transparent;
   cursor: crosshair;
+}
+
+.track-ticks {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 1px;
 }
 
 .handle {
