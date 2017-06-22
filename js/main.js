@@ -58,6 +58,8 @@ var y = d3.scaleLinear()
 var r = d3.scaleLinear()
 	.range([1, 50]);
 
+var line = d3.line();
+
 var dot = svg.selectAll(".dot");
 
 d3.json("data/00140M_evol_track.json", function(error, data) {
@@ -145,6 +147,22 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("transform", "translate(" + margin.left + ",0)")
 		.call(d3.axisLeft(y));
 
+	/* Track */
+
+	line.x(function(d){ return x(data.log_Teff[d])})
+		.y(function(d){ return y(data.log_L[d])});
+
+	svg.append("g")
+		.datum(d3.range(1)).append("path")
+		.attr("class", "stellar-track")
+		.attr("fill", "none")
+		.attr("stroke", "steelblue")
+		.attr("stroke-linejoin", "round")
+		.attr("stroke-linecap", "round")
+		.attr("stroke-width", 1.5)
+		.attr("opacity", 0.5)
+		.attr("d", line);
+
 	/* Star */
 
 	dot.data([0])
@@ -157,6 +175,16 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 });
 
 function plotStar(data, idx){
+
+	svg.selectAll(".stellar-track")
+		.datum(d3.range(idx))
+		.attr("fill", "none")
+		.attr("stroke", "steelblue")
+		.attr("stroke-linejoin", "round")
+		.attr("stroke-linecap", "round")
+		.attr("stroke-width", 1.5)
+		.attr("opacity", 0.5)
+		.attr("d", line);
 
 	svg.selectAll(".dot")
 		.datum([idx])
