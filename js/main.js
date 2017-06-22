@@ -39,6 +39,7 @@ var slider = svgSlider.append("g")
 	.attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
 
 var handle = slider.insert("circle", ".track-overlay")
+    //.html("<polygon points='9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78' style='fill-rule:nonzero;'/>")
 	.attr("class", "handle")
 	.attr("r", 9);
 
