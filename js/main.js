@@ -212,3 +212,7 @@ function getPhaseLabel(phase){
 			return "post-AGB+WDCS";
 	}
 }
+
+function getColor(temp){
+	/*Code here*/
+}
