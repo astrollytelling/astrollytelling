@@ -57,7 +57,7 @@ var y = d3.scaleLinear()
 	.range([height, 0]);
 
 var r = d3.scaleLinear()
-	.range([1, 50]);
+	.range([2, 4]);
 
 var line = d3.line();
 
@@ -136,7 +136,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	x.domain([d3.extent(data.log_Teff)[1], d3.extent(data.log_Teff)[0]]);
 	y.domain(d3.extent(data.log_L));
-	r.domain([10**d3.extent(data.log_R)[0], 10**d3.extent(data.log_R)[1]]);
+	r.domain([d3.extent(data.log_R)[0], d3.extent(data.log_R)[1]]);
 
 	svg.append("g")
 		.attr("class", "axis axis--x")
@@ -157,7 +157,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.datum(d3.range(1)).append("path")
 		.attr("class", "stellar-track")
 		.attr("fill", "none")
-		.attr("stroke", "steelblue")
+		.attr("stroke", "gray")
 		.attr("stroke-linejoin", "round")
 		.attr("stroke-linecap", "round")
 		.attr("stroke-width", 1.5)
@@ -180,7 +180,7 @@ function plotStar(data, idx){
 	svg.selectAll(".stellar-track")
 		.datum(d3.range(idx))
 		.attr("fill", "none")
-		.attr("stroke", "steelblue")
+		.attr("stroke", "gray")
 		.attr("stroke-linejoin", "round")
 		.attr("stroke-linecap", "round")
 		.attr("stroke-width", 1.5)
