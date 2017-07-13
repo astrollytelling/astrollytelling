@@ -33,6 +33,7 @@ var svgSlider = d3.select("#slider").append("svg").attr("width", 960).attr("heig
 	heightSlider = +svgSlider.attr("height");
 
 var xSlider = d3.scaleLinear();
+var ageToIndex = d3.scaleLinear();
 
 var slider = svgSlider.append("g")
 	.attr("class", "slider")
@@ -76,19 +77,20 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	console.log(data);
 
-	var phasesTicks = [];
-	_.uniq(data.phase).forEach(function(e){
-		phasesTicks.push(data.phase.indexOf(e));
-	 });
-	//phasesTicks.push(data.phase.length-1);
-
 	/* Slider */
 
-	// TODO: change domain to d3.range so that we get the index to make all other calculations easier
-	//xSlider.domain(d3.extent(data.star_age))
-	xSlider.domain([0, data.star_age.length - 1])
+	xSlider.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
 		.range([0, 500])
 		.clamp(true);
+
+	ageToIndex.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
+		.range([0, data.star_age.length - 1])
+		.clamp(true);
+
+	var phasesTicks = [];
+	_.uniq(data.phase).forEach(function(e){
+		phasesTicks.push(ageToIndex.invert(data.phase.indexOf(e)));
+	});
 
 	slider.append("line")
 		.attr("class", "track")
@@ -100,7 +102,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("class", "track-overlay")
 		.call(d3.drag()
 			.on("start.interrupt", function() { slider.interrupt(); })
-			.on("start drag", function() { plotStar(data, Math.round(xSlider.invert(d3.event.x)));
+			.on("start drag", function() { plotStar(data, Math.round(ageToIndex(xSlider.invert(d3.event.x))));
 				handle.attr("cx", xSlider(xSlider.invert(d3.event.x))); }));
 
 	slider.append("g")
@@ -122,6 +124,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("x", function(d){ return xSlider(d);})
 		.attr("text-anchor", "middle")
 		.text(function(d, idx) { return getPhaseLabel(idx); });
+		//.text(function(d, idx) { return ""+Math.round(d);});
 
 
 	/* HR diagram */
