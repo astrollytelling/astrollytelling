@@ -1,16 +1,48 @@
 
 /* ADD YOUR STYLES HERE */
-
-
-body{
+/*body{
   background-color: whitesmoke;
+}*/
+
+/* SCROLLER */
+
+body {
+  margin:0;
+  position:fixed;
+  top:0;right:0;bottom:0;left:0;
+  font-family: Helvetica, Arial;
+}
+#container-viz {
+  position: relative;
+  z-index: 100;
+}
+#sticky-viz {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  z-index: 50;
+}
+.panel-viz {
+  width: 100%;
+  padding-left: 20px;
+  padding-top: 25vh;
+  padding-bottom: 25vh;
+}
+.panel-viz p {
+  padding-right: 50%;
+}
+.panel-viz:first-child {
+  padding-top: 35vh;
+}
+.panel-viz:last-child {
+  padding-bottom: 45vh;
 }
 
-
-svg {
+/*svg {
   font: 10px sans-serif;
   padding: 10px;
-}
+}*/
 
 h1 {
   font-family: 'Exo 2', sans-serif;

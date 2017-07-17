@@ -12,12 +12,11 @@
 </head>
 <body>
 
-	<div class="container" id="vis-div">
+	<!--<div class="container" id="vis-div">
 		<header>
 			<div id="title"></div>
 			<div id="subtitle"></div>
 		</header>
-		<!-- Parent container for the visualization -->
 		<div class="row">
 			<div class="col-md-12">
 				<div id="slider"></div>
@@ -29,9 +28,29 @@
 			</div>
 		</div>
 		<div id="notes"></div>
+	</div>-->
+
+	<!-- Scroller -->
+	<div id="sticky-viz">
 	</div>
 
 
+	<div id="container-viz" style="height: 100vh; overflow: scroll">
+		<div id="content-viz">
+			<div class="panel-viz">
+				<p>Phase 0</p>
+			</div>
+			<div class="panel-viz">
+				<p>Phase 1</p>
+			</div>
+			<div class="panel-viz">
+				<p>Phase 2</p>
+			</div>
+			<div class="panel-viz">
+				<p>Phase 3</p>
+			</div>
+		</div>
+	</div>
 
 	<!-- Load JS libraries: jQuery, bootstrap, D3, D3 tooltip -->
 	<script src="js/jquery.min.js"></script>
@@ -40,6 +59,7 @@
 	<script src="js/spin.min.js"></script>
 	<script src="js/colorbrewer.js"></script>
 	<script src="js/underscore-min.js"></script>
+	<script src="js/graph-scroll.js"></script>
 
 	<!-- Your implementation -->
 	<script src="js/main.js"></script>

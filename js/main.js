@@ -27,7 +27,7 @@ var spinner = new Spinner(opts).spin(target);
 
 /* SLIDER */
 
-var svgSlider = d3.select("#slider").append("svg").attr("width", 960).attr("height", 100),
+/*var svgSlider = d3.select("#slider").append("svg").attr("width", 960).attr("height", 100),
 	marginSlider = {top: 80, right: 10, bottom: 10, left: 20},
 	widthSlider = +svgSlider.attr("width") - marginSlider.left - marginSlider.right,
 	heightSlider = +svgSlider.attr("height");
@@ -42,14 +42,16 @@ var slider = svgSlider.append("g")
 var handle = slider.insert("circle", ".track-overlay")
     //.html("<polygon points='9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78' style='fill-rule:nonzero;'/>")
 	.attr("class", "handle")
-	.attr("r", 9);
+	.attr("r", 9);*/
 
 /* HR diagram */
 
-var svg = d3.select("#HR-diagram").append("svg"),
+var svg = d3.select("#sticky-viz").append("svg"),
 	margin = {top: 40, right: 10, bottom: 10, left: 20},
-	width = 960 - margin.left - margin.right,
-	height = 500 - margin.top - margin.bottom;
+	//width = 960 - margin.left - margin.right,
+	//height = 500 - margin.top - margin.bottom;
+	width = window.innerWidth / 2;
+	height = window.innerHeight;
 
 var x = d3.scaleLinear()
 	.range([0, width]);
@@ -79,6 +81,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Slider */
 
+/*
 	xSlider.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
 		.range([0, 500])
 		.clamp(true);
@@ -125,15 +128,28 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("text-anchor", "middle")
 		.text(function(d, idx) { return getPhaseLabel(idx); });
 		//.text(function(d, idx) { return ""+Math.round(d);});
+*/
 
 
 	/* HR diagram */
 
 	svg.datum(data)
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
-		.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.attr("width", width)
+		.attr("height", height)
+		.append("g");
+		//.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+	var body = d3.select('body').node();
+	var container = d3.select('#container-viz');
+	var content = d3.select('#content-viz');
+
+	var scroll_length = content.node().getBoundingClientRect().height - height;
+
+	/* Scroll to index */
+	var scrollScale = d3.scaleLinear()
+		.domain([0, scroll_length])
+		.range([0, data.star_age.length - 1])
+		.clamp(true);
 
 	/* Axis */
 
@@ -176,9 +192,55 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("cy", function(d){ return y(data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])});
 
+	var scrollTop = 0;
+	var newScrollTop = 0;
+
+	container
+		.on("scroll.scroller", function() {
+			newScrollTop = container.node().scrollTop
+		});
+
+	var setDimensions = function() {
+		width = window.innerWidth / 2;
+		height = window.innerHeight;
+		scroll_length = content.node().getBoundingClientRect().height - height;
+
+		scrollScale.domain([0, scroll_length])
+	};
+
+	var render = function() {
+		if (scrollTop !== newScrollTop) {
+			scrollTop = newScrollTop;
+
+			var idx = Math.round(scrollScale(scrollTop));
+
+			svg.selectAll(".stellar-track")
+				.datum(d3.range(idx))
+				.attr("fill", "none")
+				.attr("stroke", "gray")
+				.attr("stroke-linejoin", "round")
+				.attr("stroke-linecap", "round")
+				.attr("stroke-width", 1.5)
+				.attr("opacity", 0.5)
+				.attr("d", line);
+
+			svg.selectAll(".dot")
+				.datum([idx])
+				.attr("cx", function(d){ return x(data.log_Teff[d])})
+				.attr("cy", function(d){ return y(data.log_L[d])})
+				.attr("r", function(d){ return r(10**data.log_R[d])});
+
+		}
+
+		window.requestAnimationFrame(render);
+	};
+	window.requestAnimationFrame(render);
+
+	window.onresize = setDimensions;
+
 });
 
-function plotStar(data, idx){
+/*function plotStar(data, idx){
 
 	svg.selectAll(".stellar-track")
 		.datum(d3.range(idx))
@@ -195,7 +257,7 @@ function plotStar(data, idx){
 		.attr("cx", function(d){ return x(data.log_Teff[d])})
 		.attr("cy", function(d){ return y(data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])});
-}
+}*/
 
 function getPhaseLabel(phase){
 	switch(phase) {
