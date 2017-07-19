@@ -1,16 +1,9 @@
-
-/* ADD YOUR STYLES HERE */
-/*body{
-  background-color: whitesmoke;
-}*/
-
-/* SCROLLER */
-
 body {
   margin:0;
   position:fixed;
   top:0;right:0;bottom:0;left:0;
-  font-family: Helvetica, Arial;
+  background-color: whitesmoke;
+  font-family: 'Exo 2', sans-serif;
 }
 #container-viz {
   position: relative;
@@ -22,6 +15,7 @@ body {
   right: 0;
   width: 50%;
   z-index: 50;
+  font: 10px sans-serif;
 }
 .panel-viz {
   width: 100%;
@@ -38,11 +32,6 @@ body {
 .panel-viz:last-child {
   padding-bottom: 45vh;
 }
-
-/*svg {
-  font: 10px sans-serif;
-  padding: 10px;
-}*/
 
 h1 {
   font-family: 'Exo 2', sans-serif;

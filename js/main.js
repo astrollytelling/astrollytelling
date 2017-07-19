@@ -26,19 +26,10 @@ var target = document.getElementById('vis-div');
 var spinner = new Spinner(opts).spin(target);
 var svg = d3.select("#sticky-viz");
 
-/* SLIDER */
-
-var	marginSlider = {top: 30, right: 100, bottom: 10, left: 20},
-	widthSlider = window.innerWidth / 2 - marginSlider.left - marginSlider.right ,
-	heightSlider = marginHR.top,
-	radiusSlider = 9;
-var xSlider = d3.scaleLinear();
-var ageToIndex = d3.scaleLinear();
-
 
 /* HR diagram */
 
-var	marginHR = {top: 50, right: 10, bottom: 40, left: 20},
+var	marginHR = {top: 60, right: 10, bottom: 40, left: 20},
 	width = window.innerWidth / 2 - marginHR.left - marginHR.right;
 	height = window.innerHeight * 9/10 - marginHR.top - marginHR.bottom;
 
@@ -52,6 +43,15 @@ var r = d3.scaleLinear()
 	.range([2, 4]);
 
 var line = d3.line();
+
+/* SLIDER */
+
+var	marginSlider = {top: 10, right: 100, bottom: 10, left: 20},
+	widthSlider = window.innerWidth / 2 - marginSlider.left - marginSlider.right ,
+	heightSlider = marginHR.top,
+	radiusSlider = 9;
+var xSlider = d3.scaleLinear();
+var ageToIndex = d3.scaleLinear();
 
 d3.json("data/00140M_evol_track.json", function(error, data) {
 	if (error) throw error;
