@@ -24,34 +24,23 @@ var opts = {
 
 var target = document.getElementById('vis-div');
 var spinner = new Spinner(opts).spin(target);
+var svg = d3.select("#sticky-viz");
 
 /* SLIDER */
 
-/*var svgSlider = d3.select("#slider").append("svg").attr("width", 960).attr("height", 100),
-	marginSlider = {top: 80, right: 10, bottom: 10, left: 20},
-	widthSlider = +svgSlider.attr("width") - marginSlider.left - marginSlider.right,
-	heightSlider = +svgSlider.attr("height");
-
+var	marginSlider = {top: 30, right: 100, bottom: 10, left: 20},
+	widthSlider = window.innerWidth / 2 - marginSlider.left - marginSlider.right ,
+	heightSlider = marginHR.top,
+	radiusSlider = 9;
 var xSlider = d3.scaleLinear();
 var ageToIndex = d3.scaleLinear();
 
-var slider = svgSlider.append("g")
-	.attr("class", "slider")
-	.attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
-
-var handle = slider.insert("circle", ".track-overlay")
-    //.html("<polygon points='9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78' style='fill-rule:nonzero;'/>")
-	.attr("class", "handle")
-	.attr("r", 9);*/
 
 /* HR diagram */
 
-var svg = d3.select("#sticky-viz").append("svg"),
-	margin = {top: 40, right: 10, bottom: 10, left: 20},
-	//width = 960 - margin.left - margin.right,
-	//height = 500 - margin.top - margin.bottom;
-	width = window.innerWidth / 2;
-	height = window.innerHeight;
+var	marginHR = {top: 50, right: 10, bottom: 40, left: 20},
+	width = window.innerWidth / 2 - marginHR.left - marginHR.right;
+	height = window.innerHeight * 9/10 - marginHR.top - marginHR.bottom;
 
 var x = d3.scaleLinear()
 	.range([0, width]);
@@ -63,8 +52,6 @@ var r = d3.scaleLinear()
 	.range([2, 4]);
 
 var line = d3.line();
-
-var dot = svg.selectAll(".dot");
 
 d3.json("data/00140M_evol_track.json", function(error, data) {
 	if (error) throw error;
@@ -81,9 +68,22 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Slider */
 
-/*
+	var svgSlider = svg.append("svg")
+		.attr("width", widthSlider)
+		.attr("height", heightSlider)
+		.attr("transform", "translate(" + marginSlider.left + "," + marginSlider.top + ")");
+
+	var slider = svgSlider.append("g")
+		.attr("class", "slider")
+		.attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
+
+	var handle = slider.insert("circle", ".track-overlay")
+		//.html("<polygon points='9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78' style='fill-rule:nonzero;'/>")
+		.attr("class", "handle")
+		.attr("r", radiusSlider);
+
 	xSlider.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
-		.range([0, 500])
+		.range([0, widthSlider - 2*radiusSlider])
 		.clamp(true);
 
 	ageToIndex.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
@@ -103,11 +103,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("class", "track-inset")
 		.select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
 		.attr("class", "track-overlay")
-		.call(d3.drag()
-			.on("start.interrupt", function() { slider.interrupt(); })
-			.on("start drag", function() { plotStar(data, Math.round(ageToIndex(xSlider.invert(d3.event.x))));
-				handle.attr("cx", xSlider(xSlider.invert(d3.event.x))); }));
-
+	
 	slider.append("g")
 		.selectAll("line")
 		.data(phasesTicks)
@@ -120,7 +116,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	slider.insert("g", ".track-overlay")
 		.attr("class", "ticks")
-		.attr("transform", "translate(0," + 18 + ")")
+		.attr("transform", "translate(0," + 2*radiusSlider + ")")
 		.selectAll("text")
 		.data(phasesTicks)
 		.enter().append("text")
@@ -128,22 +124,21 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("text-anchor", "middle")
 		.text(function(d, idx) { return getPhaseLabel(idx); });
 		//.text(function(d, idx) { return ""+Math.round(d);});
-*/
-
 
 	/* HR diagram */
 
-	svg.datum(data)
+	var svgHR = svg.append("svg").datum(data)
 		.attr("width", width)
 		.attr("height", height)
-		.append("g");
-		//.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+		.attr("transform", "translate(" + marginHR.left + "," + marginHR.top + ")");
+
+	var dot = svgHR.selectAll(".dot");
 
 	var body = d3.select('body').node();
 	var container = d3.select('#container-viz');
 	var content = d3.select('#content-viz');
 
-	var scroll_length = content.node().getBoundingClientRect().height - height;
+	var scroll_length = content.node().getBoundingClientRect().height -  window.innerHeight;
 
 	/* Scroll to index */
 	var scrollScale = d3.scaleLinear()
@@ -157,14 +152,14 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 	y.domain(d3.extent(data.log_L));
 	r.domain([d3.extent(data.log_R)[0], d3.extent(data.log_R)[1]]);
 
-	svg.append("g")
+	svgHR.append("g")
 		.attr("class", "axis axis--x")
 		.attr("transform", "translate(0," + height + ")")
 		.call(d3.axisBottom(x));
 
-	svg.append("g")
+	svgHR.append("g")
 		.attr("class", "axis axis--y")
-		.attr("transform", "translate(" + margin.left + ",0)")
+		.attr("transform", "translate(" + marginHR.left + ",0)")
 		.call(d3.axisLeft(y));
 
 	/* Track */
@@ -172,7 +167,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 	line.x(function(d){ return x(data.log_Teff[d])})
 		.y(function(d){ return y(data.log_L[d])});
 
-	svg.append("g")
+	svgHR.append("g")
 		.datum(d3.range(1)).append("path")
 		.attr("class", "stellar-track")
 		.attr("fill", "none")
@@ -214,7 +209,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 			var idx = Math.round(scrollScale(scrollTop));
 
-			svg.selectAll(".stellar-track")
+			svgHR.selectAll(".stellar-track")
 				.datum(d3.range(idx))
 				.attr("fill", "none")
 				.attr("stroke", "gray")
@@ -224,11 +219,13 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 				.attr("opacity", 0.5)
 				.attr("d", line);
 
-			svg.selectAll(".dot")
+			svgHR.selectAll(".dot")
 				.datum([idx])
 				.attr("cx", function(d){ return x(data.log_Teff[d])})
 				.attr("cy", function(d){ return y(data.log_L[d])})
 				.attr("r", function(d){ return r(10**data.log_R[d])});
+
+			handle.attr("cx", xSlider(ageToIndex.invert(idx)))
 
 		}
 
@@ -240,24 +237,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 });
 
-/*function plotStar(data, idx){
-
-	svg.selectAll(".stellar-track")
-		.datum(d3.range(idx))
-		.attr("fill", "none")
-		.attr("stroke", "gray")
-		.attr("stroke-linejoin", "round")
-		.attr("stroke-linecap", "round")
-		.attr("stroke-width", 1.5)
-		.attr("opacity", 0.5)
-		.attr("d", line);
-
-	svg.selectAll(".dot")
-		.datum([idx])
-		.attr("cx", function(d){ return x(data.log_Teff[d])})
-		.attr("cy", function(d){ return y(data.log_L[d])})
-		.attr("r", function(d){ return r(10**data.log_R[d])});
-}*/
 
 function getPhaseLabel(phase){
 	switch(phase) {
