@@ -168,7 +168,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("x", 10)
 		.attr("dy", "0.75em")
 		.attr("class", "text-luminosity")
-		.attr("transform", "rotate (-90) translate(-90,10)")
+		.attr("transform", "rotate (-90) translate(-85,5)")
 		.html("Log(Luminosity)");
 
 	svgHR.append("text")
@@ -176,7 +176,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("y", height)
 		.attr("dy", "0.75em")
 		.attr("class", "text-temperature")
-		.attr("transform", "translate(-90,-20)")
+		.attr("transform", "translate(-80,-15)")
 		.html("Log(Temperature)");
 
 	/* Track */
