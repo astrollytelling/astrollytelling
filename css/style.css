@@ -93,6 +93,12 @@ header {
   shape-rendering: crispEdges;
 }
 
+.stellar-track {
+  stroke: #000;
+  stroke-opacity: 0.2;
+  stroke-width: 2px;
+}
+
 .cell text {
   font-weight: bold;
   text-transform: capitalize;
