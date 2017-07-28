@@ -92,7 +92,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.clamp(true);
 
 	var phasesTicks = [];
-	_.uniq(data.phase).forEach(function(e){
+	var phases = _.uniq(data.phase);
+	phases.forEach(function(e){
 		phasesTicks.push(ageToIndex.invert(data.phase.indexOf(e)));
 	});
 
@@ -123,7 +124,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.enter().append("text")
 		.attr("x", function(d){ return xSlider(d);})
 		.attr("text-anchor", "middle")
-		.text(function(d, idx) { return getPhaseLabel(idx); });
+		.text(function(d, idx) { return getPhaseLabel(phases[idx]); });
 		//.text(function(d, idx) { return ""+Math.round(d);});
 
 	/* HR diagram */
@@ -225,6 +226,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 			scrollTop = newScrollTop;
 
 			var idx = Math.round(scrollScale(scrollTop));
+			var phase = data.phase[idx];
 
 			svgHR.selectAll(".stellar-track")
 				.datum(d3.range(idx))
@@ -242,6 +244,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 				.attr("cy", function(d){ return y(data.log_L[d])})
 				.attr("r", function(d){ return r(10**data.log_R[d])});
 
+			d3.selectAll("#sticky-text")
+				.html("<h3>"+getText(phase)+"</h3>");
+
 			handle.attr("cx", xSlider(ageToIndex.invert(idx)))
 
 		}
@@ -254,12 +259,16 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 });
 
+function getText(phase){
+	return getPhaseLabel(phase);
+}
+
 
 function getPhaseLabel(phase){
 	switch(phase) {
-		case 0:
+		case -1:
 			return "PMS";
-		case 1:
+		case 0:
 			return "MS";
 		case 2:
 			return "SGB+RGB";
