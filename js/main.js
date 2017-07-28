@@ -1,33 +1,6 @@
-var size = 140,
-	padding = 10;
-
-var filter = "";
-
-/* SPINNER */
-
-var opts = {
-	lines: 13, // The number of lines to draw
-	length: 6, // The length of each line
-	width: 4, // The line thickness
-	radius: 13, // The radius of the inner circle
-	corners: 1, // Corner roundness (0..1)
-	color: '#000', // #rgb or #rrggbb or array of colors
-	speed: 1.5, // Rounds per second
-	trail: 75, // Afterglow percentage
-	shadow: false, // Whether to render a shadow
-	hwaccel: false, // Whether to use hardware acceleration
-	className: 'spinner', // The CSS class to assign to the spinner
-	zIndex: 2e9, // The z-index (defaults to 2000000000)
-	top: '50%', // Top position relative to parent
-	left: '50%' // Left position relative to parent
-};
-
-var target = document.getElementById('vis-div');
-var spinner = new Spinner(opts).spin(target);
 var svg = d3.select("#sticky-viz");
 
-
-/* HR diagram */
+/* Define HR diagram */
 
 var	marginHR = {top: 40, right: 40, bottom: 40, left: 30},
 	width = window.innerWidth * 11/20;
@@ -44,7 +17,7 @@ var r = d3.scaleLinear()
 
 var line = d3.line();
 
-/* SLIDER */
+/* Define slider */
 
 var	marginSlider = {top: 10, right: 100, bottom: 10, left: 50},
 	widthSlider = window.innerWidth * 2 / 5,
@@ -53,11 +26,12 @@ var	marginSlider = {top: 10, right: 100, bottom: 10, left: 50},
 var xSlider = d3.scaleLinear();
 var ageToIndex = d3.scaleLinear();
 
+/* Read data */
+
 d3.json("data/00140M_evol_track.json", function(error, data) {
 	if (error) throw error;
 
-	spinner.stop();
-
+	/* Set global titles */
 	d3.select("#title").html("<h1>MIST Stellar Evolution</h1>");
 	d3.select("#subtitle").html('A visualization by <a href="https://www.cfa.harvard.edu/~fbecerra">Fernando Becerra</a>' +
 		' and <a href="https://www.cfa.harvard.edu/~jchoi">Jieun Choi</a>');
@@ -204,6 +178,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("cx", function(d){ return x(data.log_Teff[d])})
 		.attr("cy", function(d){ return y(data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])});
+
+	/* Implementing scroller */
 
 	var scrollTop = 0;
 	var newScrollTop = 0;
