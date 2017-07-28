@@ -29,9 +29,9 @@ var svg = d3.select("#sticky-viz");
 
 /* HR diagram */
 
-var	marginHR = {top: 60, right: 10, bottom: 40, left: 20},
-	width = window.innerWidth / 2 - marginHR.left - marginHR.right;
-	height = window.innerHeight * 9/10 - marginHR.top - marginHR.bottom;
+var	marginHR = {top: 40, right: 40, bottom: 40, left: 30},
+	width = window.innerWidth * 11/20;
+	height = window.innerHeight * 4/5;
 
 var x = d3.scaleLinear()
 	.range([0, width]);
@@ -46,8 +46,8 @@ var line = d3.line();
 
 /* SLIDER */
 
-var	marginSlider = {top: 10, right: 100, bottom: 10, left: 20},
-	widthSlider = window.innerWidth / 2 - marginSlider.left - marginSlider.right ,
+var	marginSlider = {top: 10, right: 100, bottom: 10, left: 50},
+	widthSlider = window.innerWidth * 2 / 5,
 	heightSlider = marginHR.top,
 	radiusSlider = 9;
 var xSlider = d3.scaleLinear();
@@ -69,8 +69,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 	/* Slider */
 
 	var svgSlider = svg.append("svg")
-		.attr("width", widthSlider)
-		.attr("height", heightSlider)
+		.attr("width", widthSlider + marginSlider.left + marginSlider.right)
+		.attr("height", heightSlider + marginSlider.top + marginSlider.bottom)
+		.append("g")
 		.attr("transform", "translate(" + marginSlider.left + "," + marginSlider.top + ")");
 
 	var slider = svgSlider.append("g")
@@ -102,7 +103,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
 		.attr("class", "track-inset")
 		.select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
-		.attr("class", "track-overlay")
+		.attr("class", "track-overlay");
 	
 	slider.append("g")
 		.selectAll("line")
@@ -128,8 +129,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 	/* HR diagram */
 
 	var svgHR = svg.append("svg").datum(data)
-		.attr("width", width)
-		.attr("height", height)
+		.attr("width", width + marginHR.left + marginHR.right)
+		.attr("height", height + marginHR.top + marginHR.bottom)
+		.append("g")
 		.attr("transform", "translate(" + marginHR.left + "," + marginHR.top + ")");
 
 	var dot = svgHR.selectAll(".dot");
@@ -159,8 +161,23 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	svgHR.append("g")
 		.attr("class", "axis axis--y")
-		.attr("transform", "translate(" + marginHR.left + ",0)")
+		.attr("transform", "translate(0,0)")
 		.call(d3.axisLeft(y));
+
+	svgHR.append("text")
+		.attr("x", 10)
+		.attr("dy", "0.75em")
+		.attr("class", "text-luminosity")
+		.attr("transform", "rotate (-90) translate(-90,10)")
+		.html("Log(Luminosity)");
+
+	svgHR.append("text")
+		.attr("x", width)
+		.attr("y", height)
+		.attr("dy", "0.75em")
+		.attr("class", "text-temperature")
+		.attr("transform", "translate(-90,-20)")
+		.html("Log(Temperature)");
 
 	/* Track */
 

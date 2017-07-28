@@ -13,7 +13,7 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  width: 50%;
+  width: 60%;
   z-index: 50;
   font: 10px sans-serif;
 }
@@ -75,12 +75,11 @@ header {
   shape-rendering: crispEdges;
 }
 
+.axis path,
 .axis line {
+  fill: none;
   stroke: #ddd;
-}
-
-.axis path {
-  display: none;
+  shape-rendering: crispEdges;
 }
 
 .cell text {
