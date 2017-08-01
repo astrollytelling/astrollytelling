@@ -125,8 +125,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Axis */
 
-	x.domain([d3.extent(data.log_Teff)[1], d3.extent(data.log_Teff)[0]]);
-	y.domain(d3.extent(data.log_L));
+	x.domain([3.9, d3.extent(data.log_Teff)[0] - 0.1])
+	y.domain([-1.5, d3.extent(data.log_L)[1] + 0.2]);
 	r.domain([d3.extent(data.log_R)[0], d3.extent(data.log_R)[1]]);
 
 	svgHR.append("g")
@@ -203,6 +203,22 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 			var idx = Math.round(scrollScale(scrollTop));
 			var phase = data.phase[idx];
+
+			if (phase == 6){
+				x.domain([Math.max(data.log_Teff[idx], 3.8, d3.extent(data.log_Teff.slice(0,idx))[1]) + 0.1,
+						  d3.extent(data.log_Teff)[0] - 0.1]);
+			} else {
+				x.domain([3.9, d3.extent(data.log_Teff)[0] - 0.1]);
+			}
+
+			line.x(function(d){ return x(data.log_Teff[d])})
+				.y(function(d){ return y(data.log_L[d])});
+
+			svgHR.selectAll(".axis--x")
+				.call(d3.axisBottom(x));
+
+			svgHR.selectAll(".stellar-track")
+				.attr("d", line);
 
 			svgHR.selectAll(".stellar-track")
 				.datum(d3.range(idx))
