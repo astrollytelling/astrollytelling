@@ -179,6 +179,22 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("cy", function(d){ return y(data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])});
 
+	/* Star diagram */
+
+	d3.selectAll("#star-text")
+		.html("<h2>Stellar Evolution</h2>");
+
+	var svgDiagram = d3.select("#star-diagram").append("svg")
+		.attr("width", 200)
+		.attr("height", 200);
+
+	svgDiagram.selectAll(".diagram").data([0])
+		.enter().append("circle")
+		.attr("class", "diagram")
+		.attr("cx", 100)
+		.attr("cy", 100)
+		.attr("r", function(d){ return r(10**data.log_R[d])});
+
 	/* Implementing scroller */
 
 	var scrollTop = 0;
@@ -191,7 +207,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	var setDimensions = function() {
 		width = window.innerWidth / 2;
-		height = window.innerHeight;
+		height = window.innerHeight;e
 		scroll_length = content.node().getBoundingClientRect().height - height;
 
 		scrollScale.domain([0, scroll_length])
@@ -236,7 +252,13 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 				.attr("cy", function(d){ return y(data.log_L[d])})
 				.attr("r", function(d){ return r(10**data.log_R[d])});
 
-			d3.selectAll("#sticky-text")
+			svgDiagram.selectAll(".diagram")
+				.datum([idx])
+				.attr("cx", 100)
+				.attr("cy", 100)
+				.attr("r", function(d){ return r(10**data.log_R[d])});
+
+			d3.selectAll("#star-text")
 				.html("<h3>"+getText(phase)+"</h3>");
 
 			handle.attr("cx", xSlider(ageToIndex.invert(idx)))
