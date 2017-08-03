@@ -119,7 +119,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Scroll to index */
 	var scrollScale = d3.scaleLinear()
-		.domain([0, scroll_length])
+		.domain([scroll_length*2/3, scroll_length])
 		.range([0, data.star_age.length - 1])
 		.clamp(true);
 
@@ -230,7 +230,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 				d3.select("#sticky-text").transition(1).style("opacity", 1);
 
 				var idx = Math.round(scrollScale(scrollTop));
-				console.log(scrollTop, scroll_length*2/3)
 				var phase = data.phase[idx];
 
 				if (phase == 6){
