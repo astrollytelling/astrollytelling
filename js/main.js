@@ -210,59 +210,77 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		height = window.innerHeight;
 		scroll_length = content.node().getBoundingClientRect().height - height;
 
-		scrollScale.domain([0, scroll_length])
+		scrollScale.domain([scroll_length * 2/3, scroll_length])
 	};
 
 	var render = function() {
 		if (scrollTop !== newScrollTop) {
 			scrollTop = newScrollTop;
 
-			var idx = Math.round(scrollScale(scrollTop));
-			var phase = data.phase[idx];
-
-			if (phase == 6){
-				x.domain([Math.max(data.log_Teff[idx], 3.8, d3.extent(data.log_Teff.slice(0,idx))[1]) + 0.1,
-						  d3.extent(data.log_Teff)[0] - 0.1]);
+			if (scrollTop < scroll_length / 3) {
+				d3.select("#title").transition(1).style("opacity", 1);
+				d3.select("#subtitle").transition(1).style("opacity", 1);
 			} else {
-				x.domain([3.9, d3.extent(data.log_Teff)[0] - 0.1]);
+				d3.select("#title").transition(1).style("opacity", 0);
+				d3.select("#subtitle").transition(1).style("opacity", 0);
 			}
 
-			line.x(function(d){ return x(data.log_Teff[d])})
-				.y(function(d){ return y(data.log_L[d])});
+			if (scrollTop > scroll_length*2/3){
+				d3.select("#sticky-viz").transition(1).style("opacity", 1);
+				d3.select("#sticky-text").transition(1).style("opacity", 1);
 
-			svgHR.selectAll(".axis--x")
-				.call(d3.axisBottom(x));
+				var idx = Math.round(scrollScale(scrollTop));
+				console.log(scrollTop, scroll_length*2/3)
+				var phase = data.phase[idx];
 
-			svgHR.selectAll(".stellar-track")
-				.attr("d", line);
+				if (phase == 6){
+					x.domain([Math.max(data.log_Teff[idx], 3.8, d3.extent(data.log_Teff.slice(0,idx))[1]) + 0.1,
+							  d3.extent(data.log_Teff)[0] - 0.1]);
+				} else {
+					x.domain([3.9, d3.extent(data.log_Teff)[0] - 0.1]);
+				}
 
-			svgHR.selectAll(".stellar-track")
-				.datum(d3.range(idx))
-				.attr("fill", "none")
-				.attr("stroke", "gray")
-				.attr("stroke-linejoin", "round")
-				.attr("stroke-linecap", "round")
-				.attr("stroke-width", 1.5)
-				.attr("opacity", 0.5)
-				.attr("d", line);
+				line.x(function(d){ return x(data.log_Teff[d])})
+					.y(function(d){ return y(data.log_L[d])});
 
-			svgHR.selectAll(".dot")
-				.datum([idx])
-				.attr("cx", function(d){ return x(data.log_Teff[d])})
-				.attr("cy", function(d){ return y(data.log_L[d])})
-				.attr("r", function(d){ return r(10**data.log_R[d])});
+				svgHR.selectAll(".axis--x")
+					.call(d3.axisBottom(x));
 
-			svgDiagram.selectAll(".diagram")
-				.datum([idx])
-				.attr("cx", 100)
-				.attr("cy", 100)
-				.attr("r", function(d){ return r(10**data.log_R[d])});
+				svgHR.selectAll(".stellar-track")
+					.attr("d", line);
 
-			d3.selectAll("#star-text")
-				.html("<h3>"+getText(phase)+"</h3>");
+				svgHR.selectAll(".stellar-track")
+					.datum(d3.range(idx))
+					.attr("fill", "none")
+					.attr("stroke", "gray")
+					.attr("stroke-linejoin", "round")
+					.attr("stroke-linecap", "round")
+					.attr("stroke-width", 1.5)
+					.attr("opacity", 0.5)
+					.attr("d", line);
 
-			handle.attr("cx", xSlider(ageToIndex.invert(idx)))
+				svgHR.selectAll(".dot")
+					.datum([idx])
+					.attr("cx", function(d){ return x(data.log_Teff[d])})
+					.attr("cy", function(d){ return y(data.log_L[d])})
+					.attr("r", function(d){ return r(10**data.log_R[d])});
 
+				svgDiagram.selectAll(".diagram")
+					.datum([idx])
+					.attr("cx", 100)
+					.attr("cy", 100)
+					.attr("r", function(d){ return r(10**data.log_R[d])});
+
+				d3.selectAll("#star-text")
+					.html("<h3>"+getText(phase)+"</h3>");
+
+				handle.attr("cx", xSlider(ageToIndex.invert(idx)))
+
+			} else {
+
+				d3.select("#sticky-viz").transition(1).style("opacity", 0);
+				d3.select("#sticky-text").transition(1).style("opacity", 0);
+			}
 		}
 
 		window.requestAnimationFrame(render);

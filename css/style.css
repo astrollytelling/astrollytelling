@@ -10,16 +10,17 @@ body {
   z-index: 100;
 }
 #sticky-viz {
-  position: relative;
+  position: absolute;
   top: 0;
   right: 0;
   width: 60%;
   z-index: 50;
   font: 10px sans-serif;
+  opacity: 0;
 }
 
 #sticky-text {
-  position: relative;
+  position: absolute;
   top: 0;
   left: 0;
   width: 40%;
@@ -27,6 +28,7 @@ body {
   padding-left: 10vh;
   padding-top: 15vh;
   padding-bottom: 25vh;
+  opacity: 0;
 }
 
 .panel-viz {
