@@ -207,7 +207,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	var setDimensions = function() {
 		width = window.innerWidth / 2;
-		height = window.innerHeight;e
+		height = window.innerHeight;
 		scroll_length = content.node().getBoundingClientRect().height - height;
 
 		scrollScale.domain([0, scroll_length])
