@@ -119,7 +119,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Scroll to index */
 	var scrollScale = d3.scaleLinear()
-		.domain([scroll_length*2/3, scroll_length])
+		.domain([0, window.innerHeight]) // This should be height(wrapper) - 100vh or something like that
 		.range([0, data.star_age.length - 1])
 		.clamp(true);
 
@@ -210,26 +210,18 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		height = window.innerHeight;
 		scroll_length = content.node().getBoundingClientRect().height - height;
 
-		scrollScale.domain([scroll_length * 2/3, scroll_length])
+		scrollScale.domain([0, window.innerHeight]) // double check this for other values
 	};
 
 	var render = function() {
 		if (scrollTop !== newScrollTop) {
 			scrollTop = newScrollTop;
 
-			if (scrollTop < scroll_length / 3) {
-				d3.select("#title").transition(1).style("opacity", 1);
-				d3.select("#subtitle").transition(1).style("opacity", 1);
-			} else {
-				d3.select("#title").transition(1).style("opacity", 0);
-				d3.select("#subtitle").transition(1).style("opacity", 0);
-			}
 
-			if (scrollTop > scroll_length*2/3){
-				d3.select("#sticky-viz").transition(1).style("opacity", 1);
-				d3.select("#sticky-text").transition(1).style("opacity", 1);
+			if (content.node().getBoundingClientRect().top < 0){
 
-				var idx = Math.round(scrollScale(scrollTop));
+				//var idx = Math.round(scrollScale(scrollTop));
+				var idx = Math.round(scrollScale(-content.node().getBoundingClientRect().top));
 				var phase = data.phase[idx];
 
 				if (phase == 6){
@@ -275,10 +267,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 				handle.attr("cx", xSlider(ageToIndex.invert(idx)))
 
-			} else {
-
-				d3.select("#sticky-viz").transition(1).style("opacity", 0);
-				d3.select("#sticky-text").transition(1).style("opacity", 0);
 			}
 		}
 
