@@ -199,7 +199,11 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("class", "dot")
 		.attr("cx", function(d){ return x(data.log_Teff[d])})
 		.attr("cy", function(d){ return y(data.log_L[d])})
-		.attr("r", function(d){ return r(10**data.log_R[d])});
+		.attr("r", function(d){ return r(10**data.log_R[d])})
+		.style("fill", function(d){
+			var value = (data.log_Teff[d] - d3.extent(data.log_Teff)[1])/(d3.extent(data.log_Teff)[1] - d3.extent(data.log_Teff)[0])
+			return d3.interpolateRdYlBu(1+value);
+		});
 
 	/* Star diagram */
 
@@ -276,7 +280,13 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 					.datum([idx])
 					.attr("cx", function(d){ return x(data.log_Teff[d])})
 					.attr("cy", function(d){ return y(data.log_L[d])})
-					.attr("r", function(d){ return r(10**data.log_R[d])});
+					.attr("r", function(d){ return r(10**data.log_R[d])})
+					.style("fill", function(d){
+						var value = (10**data.log_Teff[d] - 10**d3.extent(data.log_Teff)[1])
+							       /(10**d3.extent(data.log_Teff)[1] - 10**d3.extent(data.log_Teff)[0]);
+						console.log(value)
+						return d3.interpolateRdYlBu(1+value);
+					});
 
 				svgDiagram.selectAll(".diagram")
 					.datum([idx])
