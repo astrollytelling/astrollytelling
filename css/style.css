@@ -105,6 +105,11 @@ header {
   font-style: italic;
 }
 
+.text-mass,
+.text-age {
+  font-size: 14px;
+}
+
 .axis,
 .frame {
   shape-rendering: crispEdges;

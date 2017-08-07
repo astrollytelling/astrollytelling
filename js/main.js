@@ -154,6 +154,28 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("transform", "translate(-80,-15)")
 		.html("Log(Temperature)");
 
+	svgHR.append("text")
+		.data([0])
+		.attr("x", 10)
+		.attr("y", height)
+		.attr("dy", "0.75em")
+		.attr("class", "text-mass")
+		.attr("transform", "translate(0,-45)")
+		.html(function(d){
+			return "Mass: "+data.star_mass[d].toFixed(4)+" Solar masses"
+		});
+
+	svgHR.append("text")
+		.data([0])
+		.attr("x", 10)
+		.attr("y", height)
+		.attr("dy", "0.75em")
+		.attr("class", "text-age")
+		.attr("transform", "translate(0,-25)")
+		.html(function(d){
+			return "Age: "+data.star_age[d].toFixed(0)+" years"
+		});
+
 	/* Track */
 
 	line.x(function(d){ return x(data.log_Teff[d])})
@@ -264,6 +286,16 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 				d3.selectAll("#star-text")
 					.html("<h3>"+getText(phase)+"</h3>");
+
+				d3.selectAll(".text-mass").datum([idx])
+					.html(function(d){
+						return "Mass: "+data.star_mass[d].toFixed(4)+" Solar masses"
+					});
+
+				d3.selectAll(".text-age").datum([idx])
+					.html(function(d){
+						return "Age: "+data.star_age[d].toFixed(0)+" years"
+					});
 
 				handle.attr("cx", xSlider(ageToIndex.invert(idx)))
 
