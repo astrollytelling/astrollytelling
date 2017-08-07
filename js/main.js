@@ -2,14 +2,14 @@ var svg = d3.select("#sticky-viz");
 
 /* Define HR diagram */
 
-var	marginHR = {top: 40, right: 40, bottom: 40, left: 30},
+var	marginHR = {top: 40, right: 40, bottom: 40, left: 50},
 	width = window.innerWidth * 11/20;
 	height = window.innerHeight * 4/5;
 
-var x = d3.scaleLinear()
+var x = d3.scaleLog()
 	.range([0, width]);
 
-var y = d3.scaleLinear()
+var y = d3.scaleLog()
 	.range([height, 0]);
 
 var r = d3.scaleLinear()
@@ -125,34 +125,35 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Axis */
 
-	x.domain([3.9, d3.extent(data.log_Teff)[0] - 0.1])
-	y.domain([-1.5, d3.extent(data.log_L)[1] + 0.2]);
+	x.domain([10**3.9, 10**(d3.extent(data.log_Teff)[0] - 0.1)])
+	y.domain([10**(-1.5), 10**(d3.extent(data.log_L)[1] + 0.2)]);
 	r.domain([d3.extent(data.log_R)[0], d3.extent(data.log_R)[1]]);
 
 	svgHR.append("g")
 		.attr("class", "axis axis--x")
 		.attr("transform", "translate(0," + height + ")")
-		.call(d3.axisBottom(x));
+		.call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
 
 	svgHR.append("g")
 		.attr("class", "axis axis--y")
 		.attr("transform", "translate(0,0)")
-		.call(d3.axisLeft(y));
+		.call(d3.axisLeft(y).ticks(5)
+			.tickFormat(d3.format("")));
 
 	svgHR.append("text")
 		.attr("x", 10)
 		.attr("dy", "0.75em")
 		.attr("class", "text-luminosity")
-		.attr("transform", "rotate (-90) translate(-85,5)")
-		.html("Log(Luminosity)");
+		.attr("transform", "rotate (-90) translate(-150,5)")
+		.html("Luminosity (Solar Luminosity)");
 
 	svgHR.append("text")
 		.attr("x", width)
 		.attr("y", height)
 		.attr("dy", "0.75em")
 		.attr("class", "text-temperature")
-		.attr("transform", "translate(-80,-15)")
-		.html("Log(Temperature)");
+		.attr("transform", "translate(-100,-15)")
+		.html("Temperature (Kelvin)");
 
 	svgHR.append("text")
 		.data([0])
@@ -178,8 +179,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Track */
 
-	line.x(function(d){ return x(data.log_Teff[d])})
-		.y(function(d){ return y(data.log_L[d])});
+	line.x(function(d){ return x(10**data.log_Teff[d])})
+		.y(function(d){ return y(10**data.log_L[d])});
 
 	svgHR.append("g")
 		.datum(d3.range(1)).append("path")
@@ -197,8 +198,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 	dot.data([0])
 		.enter().append("circle")
 		.attr("class", "dot")
-		.attr("cx", function(d){ return x(data.log_Teff[d])})
-		.attr("cy", function(d){ return y(data.log_L[d])})
+		.attr("cx", function(d){ return x(10**data.log_Teff[d])})
+		.attr("cy", function(d){ return y(10**data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])})
 		.style("fill", function(d){
 			var value = (data.log_Teff[d] - d3.extent(data.log_Teff)[1])/(d3.extent(data.log_Teff)[1] - d3.extent(data.log_Teff)[0])
@@ -251,17 +252,19 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 				var phase = data.phase[idx];
 
 				if (phase == 6){
-					x.domain([Math.max(data.log_Teff[idx], 3.8, d3.extent(data.log_Teff.slice(0,idx))[1]) + 0.1,
-							  d3.extent(data.log_Teff)[0] - 0.1]);
+					x.domain([10**(Math.max(data.log_Teff[idx], 3.8, d3.extent(data.log_Teff.slice(0,idx))[1]) + 0.1),
+							  10**(d3.extent(data.log_Teff)[0] - 0.1)]);
+					svgHR.selectAll(".axis--x")
+						.call(d3.axisBottom(x).tickValues([3000, 5000, 10000, 30000, 50000, 100000]).tickFormat(d3.format("")));
 				} else {
-					x.domain([3.9, d3.extent(data.log_Teff)[0] - 0.1]);
+					x.domain([10**(3.9), 10**(d3.extent(data.log_Teff)[0] - 0.1)]);
+					svgHR.selectAll(".axis--x")
+						.call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
 				}
 
-				line.x(function(d){ return x(data.log_Teff[d])})
-					.y(function(d){ return y(data.log_L[d])});
+				line.x(function(d){ return x(10**data.log_Teff[d])})
+					.y(function(d){ return y(10**data.log_L[d])});
 
-				svgHR.selectAll(".axis--x")
-					.call(d3.axisBottom(x));
 
 				svgHR.selectAll(".stellar-track")
 					.attr("d", line);
@@ -278,13 +281,12 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 				svgHR.selectAll(".dot")
 					.datum([idx])
-					.attr("cx", function(d){ return x(data.log_Teff[d])})
-					.attr("cy", function(d){ return y(data.log_L[d])})
+					.attr("cx", function(d){ return x(10**data.log_Teff[d])})
+					.attr("cy", function(d){ return y(10**data.log_L[d])})
 					.attr("r", function(d){ return r(10**data.log_R[d])})
 					.style("fill", function(d){
 						var value = (10**data.log_Teff[d] - 10**d3.extent(data.log_Teff)[1])
 							       /(10**d3.extent(data.log_Teff)[1] - 10**d3.extent(data.log_Teff)[0]);
-						console.log(value)
 						return d3.interpolateRdYlBu(1+value);
 					});
 
