@@ -164,7 +164,7 @@ header {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #ddd;
+  stroke: #aaa;
   shape-rendering: crispEdges;
 }
 
