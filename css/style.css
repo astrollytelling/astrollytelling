@@ -190,10 +190,10 @@ circle.hidden-circle {
 }
 
 .handle {
-  fill: #fff;
+  opacity: 1.0;
   stroke: #000;
   stroke-opacity: 0.5;
-  stroke-width: 1.25px;
+  stroke-width: 1px;
 }
 
 /*

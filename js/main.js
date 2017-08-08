@@ -52,10 +52,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("class", "slider")
 		.attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
 
-	var handle = slider.insert("circle", ".track-overlay")
-		//.html("<polygon points='9.9, 1.1, 3.3, 21.78, 19.8, 8.58, 0, 8.58, 16.5, 21.78' style='fill-rule:nonzero;'/>")
-		.attr("class", "handle")
-		.attr("r", radiusSlider);
 
 	xSlider.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
 		.range([0, widthSlider - 2*radiusSlider])
@@ -101,7 +97,13 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.text(function(d, idx) { return getPhaseLabel(phases[idx]); });
 		//.text(function(d, idx) { return ""+Math.round(d);});
 
-	/* HR diagram */
+    var handle = slider.insert("circle", ".track-overlay")
+        .attr("class", "handle")
+        .attr("r", radiusSlider);
+
+    handle.style("fill", "url(#gradOffset)");
+
+    /* HR diagram */
 
 	var svgHR = svg.append("svg").datum(data)
 		.attr("width", width + marginHR.left + marginHR.right)
@@ -125,7 +127,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
 	/* Axis */
 
-	x.domain([10**3.9, 10**(d3.extent(data.log_Teff)[0] - 0.1)])
+	x.domain([10**3.9, 10**(d3.extent(data.log_Teff)[0] - 0.1)]);
 	y.domain([10**(-1.5), 10**(d3.extent(data.log_L)[1] + 0.2)]);
 	r.domain([d3.extent(data.log_R)[0], d3.extent(data.log_R)[1]]);
 
@@ -193,7 +195,43 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("opacity", 0.5)
 		.attr("d", line);
 
-	/* Star */
+    /* Star gradient, from http://bl.ocks.org/nbremer/eb0d1fd4118b731d069e2ff98dfadc47 */
+
+    var colorTemp = function(d) {
+        var value = (d - d3.extent(data.log_Teff)[1])/(d3.extent(data.log_Teff)[1] - d3.extent(data.log_Teff)[0] - 0.1);
+        return d3.interpolateRdYlBu(1+value);
+    };
+
+    var gradientOffset = svgHR.selectAll(".gradientOffset");
+
+    var gradOffset = gradientOffset.data([0])
+        .enter().append("radialGradient")
+        .attr("class", "gradientOffset")
+        .attr("cx", "25%")
+        .attr("cy", "25%")
+        .attr("r", "65%")
+        .attr("id", "gradOffset");
+
+    gradOffset.append("stop")
+        .attr("id", "offset-0")
+        .attr("offset", "0%")
+        .attr("stop-color", function(d) {
+            return d3.rgb(colorTemp(data.log_Teff[d])).brighter(1);
+        });
+    gradOffset.append("stop")
+        .attr("id", "offset-40")
+        .attr("offset", "40%")
+        .attr("stop-color", function(d) {
+            return colorTemp(data.log_Teff[d]);
+        });
+    gradOffset.append("stop")
+        .attr("id", "offset-100")
+        .attr("offset",  "100%")
+        .attr("stop-color", function(d) {
+            return d3.rgb(colorTemp(data.log_Teff[d])).darker(1.5);
+        });
+
+    /* Star */
 
 	dot.data([0])
 		.enter().append("circle")
@@ -201,12 +239,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("cx", function(d){ return x(10**data.log_Teff[d])})
 		.attr("cy", function(d){ return y(10**data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])})
-		.style("fill", function(d){
-			var value = (data.log_Teff[d] - d3.extent(data.log_Teff)[1])/(d3.extent(data.log_Teff)[1] - d3.extent(data.log_Teff)[0])
-			return d3.interpolateRdYlBu(1+value);
-		});
+        .style("fill", "url(#gradOffset)");
 
-	/* Star diagram */
+    /* Star diagram */
 
 	d3.selectAll("#star-text")
 		.html("<h2>Stellar Evolution</h2>");
@@ -237,7 +272,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		height = window.innerHeight;
 		scroll_length = content.node().getBoundingClientRect().height - height;
 
-		scrollScale.domain([0, window.innerHeight]) // double check this for other values
+		scrollScale.domain([0, window.innerHeight]); // double check this for other values
 	};
 
 	var render = function() {
@@ -279,18 +314,33 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 					.attr("opacity", 0.5)
 					.attr("d", line);
 
-				svgHR.selectAll(".dot")
+                svgHR.selectAll("#offset-0")
+                    .attr("offset", "0%")
+                    .attr("stop-color", function(d) {
+                        return d3.rgb(colorTemp(data.log_Teff[idx])).brighter(1);
+                    });
+
+                svgHR.selectAll("#offset-40")
+                    .attr("offset", "40%")
+                    .attr("stop-color", function(d) {
+                        return colorTemp(data.log_Teff[idx]);
+                    });
+
+                svgHR.selectAll("#offset-100")
+                    .attr("offset",  "100%")
+                    .attr("stop-color", function(d) {
+                        return d3.rgb(colorTemp(data.log_Teff[idx])).darker(1.5);
+                    });
+
+                svgHR.selectAll(".dot")
 					.datum([idx])
 					.attr("cx", function(d){ return x(10**data.log_Teff[d])})
 					.attr("cy", function(d){ return y(10**data.log_L[d])})
 					.attr("r", function(d){ return r(10**data.log_R[d])})
-					.style("fill", function(d){
-						var value = (data.log_Teff[d] - d3.extent(data.log_Teff)[1])
-							       /(d3.extent(data.log_Teff)[1] - d3.extent(data.log_Teff)[0]);
-						return d3.interpolateRdYlBu(1+value);
-					});
+                    .style("fill", "url(#gradOffset)");
+                    //.style("fill", function(d){ return colorTemp(d); });
 
-				svgDiagram.selectAll(".diagram")
+                svgDiagram.selectAll(".diagram")
 					.datum([idx])
 					.attr("cx", 100)
 					.attr("cy", 100)
@@ -310,6 +360,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 					});
 
 				handle.attr("cx", xSlider(ageToIndex.invert(idx)))
+                    .style("fill", "url(#gradOffset)");
 
 			}
 		}
