@@ -32,9 +32,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 	if (error) throw error;
 
 	/* Set global titles */
-	d3.select("#title").html("<h1>MIST Stellar Evolution</h1>");
-	d3.select("#subtitle").html('A visualization by <a href="https://www.cfa.harvard.edu/~fbecerra">Fernando Becerra</a>' +
-		' and <a href="https://www.cfa.harvard.edu/~jchoi">Jieun Choi</a>');
 	d3.select("#notes").html('Notes:</br> ' +
 		'&#8594; MIST</br>');
 
@@ -243,10 +240,10 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
     /* Star diagram */
 
-	d3.selectAll("#star-text")
+	d3.selectAll("#phase-subtitle")
 		.html("<h2>Stellar Evolution</h2>");
 
-	var svgDiagram = d3.select("#star-diagram").append("svg")
+	var svgDiagram = d3.select("#phase-diagram").append("svg")
 		.attr("width", 200)
 		.attr("height", 200);
 
@@ -346,7 +343,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 					.attr("cy", 100)
 					.attr("r", function(d){ return r(10**data.log_R[d])});
 
-				d3.selectAll("#star-text")
+				d3.selectAll("#phase-subtitle")
 					.html("<h3>"+getText(phase)+"</h3>");
 
 				d3.selectAll(".text-mass").datum([idx])

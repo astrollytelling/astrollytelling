@@ -41,8 +41,15 @@ body {
 }
 .wrapper {
   margin-top: 0px;
-  height: 200vh;
 }
+.wrapper-title,
+.wrapper-intro {
+  height: 100vh;
+}
+.wrapper-viz {
+  height: 300vh;
+}
+
 .content {
   padding: 0 0px;
   width: 40%;
@@ -73,6 +80,10 @@ body {
   top: 15px;
 }
 
+#sticky-text{
+  padding: 20px 20px 20px 50px;
+}
+
 #sticky-viz{
   font: 10px sans-serif;
 }
@@ -81,6 +92,11 @@ body {
   width: 100%;
   text-align: center;
   top: 50vh;
+}
+
+#section-title{
+  width: 100%;
+  text-align: center;
 }
 
 h1 {
@@ -103,6 +119,28 @@ header {
   font-family: 'Lato', sans-serif;
   text-align: left;
   font-style: italic;
+}
+
+#intro-text {
+  padding: 30px 10px 10px 30px;
+  width: 100vw;
+  margin:0 auto;
+}
+#left-col {
+  float: left;
+  width: 45vw;
+  padding: 20px 0px 20px 20px;
+
+}
+#right-col {
+  float: right;
+  width: 45vw;
+  padding: 20px 20px 20px 0px;
+}
+
+
+#star-text {
+  padding: 50px 10px 10px 50px;
 }
 
 .text-mass,
