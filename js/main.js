@@ -303,7 +303,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
         var phase_subtitle = d3.selectAll("#phase-subtitle"),
             phase_text = d3.selectAll("#phase-text");
 
-        phase_subtitle.html("<h3>" + phase_description.phase_name + "</h3>");
+        phase_subtitle.html("<h3>" + phase_description.phase_name + "(" +phase_description.phase_name_abb+ ") </h3>");
         phase_text.html(phase_description.description);
 
         var phase_diagram = d3.selectAll("#phase-diagram");
