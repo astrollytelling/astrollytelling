@@ -435,31 +435,3 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
         window.onresize = setDimensions;
     });
 });
-
-function getText(phase){
-	return getPhaseLabel(phase);
-}
-
-
-function getPhaseLabel(phase){
-	switch(phase) {
-		case -1:
-			return "PMS";
-		case 0:
-			return "MS";
-		case 2:
-			return "SGB+RGB";
-		case 3:
-			return "CHeB";
-		case 4:
-			return "EAGB";
-		case 5:
-			return "TPAGB";
-		case 6:
-			return "post-AGB+WDCS";
-	}
-}
-
-function getColor(temp){
-	/*Code here*/
-}
