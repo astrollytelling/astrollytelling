@@ -235,11 +235,19 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
     /* Star */
 
+    var getPropertyText = function(d){
+        if (d>1) {
+            return d.toFixed(0)
+        } else {
+            return d.toFixed(2)
+        }
+    };
+
     tipMap.html(function(d) {
         return "<table><tr><th>Phase:</th><th> " + getPhaseLabel(data.phase[d]) + "</th></tr>" +
-            "<th>Luminosity:</th><th> " + (10**data.log_L[d]).toFixed(0) + " L<sub>&#9737</sub></th></tr>" +
+            "<th>Luminosity:</th><th> " + getPropertyText(10**data.log_L[d]) + " L<sub>&#9737</sub></th></tr>" +
             "<th>Temperature:</th><th> " + (10**data.log_Teff[d]).toFixed(0) + " K</th></tr>" +
-            "<th>Radius:</th><th> " + (10**data.log_R[d]).toFixed(0) + " R<sub>&#9737</sub></th></tr>" +
+            "<th>Radius:</th><th> " + getPropertyText(10**data.log_R[d]) + " R<sub>&#9737</sub></th></tr>" +
             "<th>Mass:</th><th> " + (data.star_mass[d]).toFixed(4) + " M<sub>&#9737</sub></th></tr>" +
             "<th>Age:</th><th> " + (data.star_age[d]).toFixed(0) + " yr</th></tr></table>"
 
