@@ -65,10 +65,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             .range([0, data.star_age.length - 1])
             .clamp(true);
 
-        var phasesTicks = [];
         var phases = _.uniq(data.phase);
-        phases.forEach(function (e) {
-            phasesTicks.push(ageToIndex.invert(data.phase.indexOf(e)));
+        var phasesTicks = phases.map(function (e) {
+            return ageToIndex.invert(data.phase.indexOf(e));
         });
 
         slider.append("line")
@@ -109,7 +108,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             })
             .attr("text-anchor", "middle")
             .text(function (d, idx) {
-                return getPhaseLabel(phases[idx]);
+                console.log(phases)
+                var phase_idx = _.where(description, {phase_number: ""+phases[idx]})[0]
+                return phase_idx.phase_name_abb;
             });
         //.text(function(d, idx) { return ""+Math.round(d);});
 
@@ -295,7 +296,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                 d3.select(this).attr("stroke-width", "1px");
             });
 
-        /* Star diagram */
+        /* Phase description */
 
         var phase_description = _.where(description, {phase_number: ""+data.phase[0]})[0]
 
