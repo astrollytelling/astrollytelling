@@ -44,7 +44,7 @@ body {
 }
 .wrapper-title,
 .wrapper-intro {
-  height: 100vh;
+  height: 110vh;
 }
 .wrapper-viz {
   height: 300vh;
@@ -234,11 +234,10 @@ circle.hidden-circle {
   stroke-width: 1px;
 }
 
-/*
 
-!*********************!
-!*  TOOLTIP OVERLAY  *!
-!*********************!
+/*********************/
+/*  TOOLTIP OVERLAY  */
+/*********************/
 
 .tooltip-title {
   display: block;
@@ -248,13 +247,13 @@ circle.hidden-circle {
 
 .d3-tip {
   line-height: 1;
-  padding: 12px;
+  padding: 10px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
   border-radius: 2px;
 }
 
-!* Creates a small triangle extender for the tooltip *!
+/* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
@@ -267,11 +266,13 @@ circle.hidden-circle {
   text-align: center;
 }
 
-!* Style northward tooltips differently *!
+/* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
   top: 100%;
   left: 0;
 }
 
-*/
+th{
+  padding-left: 4px;
+}

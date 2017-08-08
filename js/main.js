@@ -17,6 +17,10 @@ var r = d3.scaleLinear()
 
 var line = d3.line();
 
+// Setting up d3-tip
+var tipMap = d3.tip()
+    .attr('class', 'd3-tip')
+
 /* Define slider */
 
 var	marginSlider = {top: 10, right: 100, bottom: 10, left: 50},
@@ -106,7 +110,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 		.attr("width", width + marginHR.left + marginHR.right)
 		.attr("height", height + marginHR.top + marginHR.bottom)
 		.append("g")
-		.attr("transform", "translate(" + marginHR.left + "," + marginHR.top + ")");
+		.attr("transform", "translate(" + marginHR.left + "," + marginHR.top + ")")
+        .call(tipMap);
 
 	var dot = svgHR.selectAll(".dot");
 
@@ -230,13 +235,32 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
     /* Star */
 
+    tipMap.html(function(d) {
+        return "<table><tr><th>Phase:</th><th> " + getPhaseLabel(data.phase[d]) + "</th></tr>" +
+            "<th>Luminosity:</th><th> " + (10**data.log_L[d]).toFixed(0) + " L<sub>&#9737</sub></th></tr>" +
+            "<th>Temperature:</th><th> " + (10**data.log_Teff[d]).toFixed(0) + " K</th></tr>" +
+            "<th>Radius:</th><th> " + (10**data.log_R[d]).toFixed(0) + " R<sub>&#9737</sub></th></tr>" +
+            "<th>Mass:</th><th> " + (data.star_mass[d]).toFixed(4) + " M<sub>&#9737</sub></th></tr>" +
+            "<th>Age:</th><th> " + (data.star_age[d]).toFixed(0) + " yr</th></tr></table>"
+
+    });
+
 	dot.data([0])
 		.enter().append("circle")
 		.attr("class", "dot")
 		.attr("cx", function(d){ return x(10**data.log_Teff[d])})
 		.attr("cy", function(d){ return y(10**data.log_L[d])})
 		.attr("r", function(d){ return r(10**data.log_R[d])})
-        .style("fill", "url(#gradOffset)");
+        .style("fill", "url(#gradOffset)")
+        .on('mouseover', function(d){
+            tipMap.offset([r(10**data.log_R[d])-10, 0])
+                .show(d);
+            d3.select(this).attr("stroke-width", "3px");
+        })
+        .on('mouseout', function(d){
+            tipMap.hide(d);
+            d3.select(this).attr("stroke-width", "1px");
+        });
 
     /* Star diagram */
 
