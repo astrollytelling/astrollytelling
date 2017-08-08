@@ -264,11 +264,11 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
         tipMap.html(function (d) {
             return "<table><tr><th>Phase:</th><th> " + getPhaseLabel(data.phase[d]) + "</th></tr>" +
-                "<th>Luminosity:</th><th> " + getPropertyText(10**data.log_L[d]) + " L<sub>&#9737</sub></th></tr>" +
-                "<th>Temperature:</th><th> " + (10**data.log_Teff[d]).toFixed(0) + " K</th></tr>" +
+                "<th>Luminosity:</th><th> " + d3.format(",")(getPropertyText(10**data.log_L[d])) + " L<sub>&#9737</sub></th></tr>" +
+                "<th>Temperature:</th><th> " + d3.format(",")((10**data.log_Teff[d]).toFixed(0)) + " K</th></tr>" +
                 "<th>Radius:</th><th> " + getPropertyText(10**data.log_R[d]) + " R<sub>&#9737</sub></th></tr>" +
                 "<th>Mass:</th><th> " + (data.star_mass[d]).toFixed(4) + " M<sub>&#9737</sub></th></tr>" +
-                "<th>Age:</th><th> " + (data.star_age[d]).toFixed(0) + " yr</th></tr></table>"
+                "<th>Age:</th><th> " + d3.format(",")((data.star_age[d]).toFixed(0)) + " yr</th></tr></table>"
 
         });
 
@@ -418,7 +418,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
                     d3.selectAll(".text-age").datum([idx])
                         .html(function (d) {
-                            return "Age: " + data.star_age[d].toFixed(0) + " years"
+                            return "Age: " + d3.format(",")(data.star_age[d].toFixed(0)) + " years"
                         });
 
                     handle.attr("cx", xSlider(ageToIndex.invert(idx)))
