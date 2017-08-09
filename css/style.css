@@ -143,6 +143,14 @@ header {
   padding: 50px 10px 10px 50px;
 }
 
+#phase-subtitle h3 {
+  padding: 20px 0px 10px 0px;
+}
+
+#phase-diagram {
+  text-align: center;
+}
+
 .text-mass,
 .text-age {
   font-size: 14px;
@@ -156,7 +164,7 @@ header {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #ddd;
+  stroke: #aaa;
   shape-rendering: crispEdges;
 }
 
