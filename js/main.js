@@ -19,7 +19,7 @@ var line = d3.line();
 
 // Setting up d3-tip
 var tipMap = d3.tip()
-    .attr('class', 'd3-tip')
+    .attr('class', 'd3-tip');
 
 /* Define slider */
 
@@ -108,11 +108,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             })
             .attr("text-anchor", "middle")
             .text(function (d, idx) {
-                console.log(phases)
-                var phase_idx = _.where(description, {phase_number: ""+phases[idx]})[0]
+                var phase_idx = _.where(description, {phase_number: ""+phases[idx]})[0];
                 return phase_idx.phase_name_abb;
             });
-        //.text(function(d, idx) { return ""+Math.round(d);});
 
         var handle = slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
@@ -298,23 +296,20 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
         /* Phase description */
 
-        var phase_description = _.where(description, {phase_number: ""+data.phase[0]})[0]
-
-        var phase_subtitle = d3.selectAll("#phase-subtitle"),
-            phase_text = d3.selectAll("#phase-text");
+        var phase_description = _.where(description, {phase_number: ""+data.phase[0]})[0],
+            phase_subtitle = d3.selectAll("#phase-subtitle"),
+            phase_text = d3.selectAll("#phase-text"),
+            phase_diagram = d3.selectAll("#phase-diagram");
 
         phase_subtitle.html("<h3>" + phase_description.phase_name + "(" +phase_description.phase_name_abb+ ") </h3>");
         phase_text.html(phase_description.description);
-
-        var phase_diagram = d3.selectAll("#phase-diagram");
-
         phase_diagram.selectAll("img")
             .attr("src","img/"+phase_description.phase_name_abb+".png");
 
         /* Implementing scroller */
 
-        var scrollTop = 0;
-        var newScrollTop = 0;
+        var scrollTop = 0,
+            newScrollTop = 0;
 
         container
             .on("scroll.scroller", function () {
@@ -336,7 +331,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
                 if (content.node().getBoundingClientRect().top < 0) {
 
-                    //var idx = Math.round(scrollScale(scrollTop));
                     var idx = Math.round(scrollScale(-content.node().getBoundingClientRect().top));
                     var phase = data.phase[idx];
 
@@ -404,13 +398,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                         .style("fill", "url(#gradOffset)");
 
                     phase_description = _.where(description, {phase_number: ""+phase})[0]
-                    var phase_transition = 1;
-
                     phase_subtitle.html("<h3>" + phase_description.phase_name + "</h3>");
                     phase_text.html(phase_description.description);
-
                     phase_diagram.selectAll("img").attr("src","img/"+phase_description.phase_name_abb+".png");
-
 
                     d3.selectAll(".text-mass").datum([idx])
                         .html(function (d) {
