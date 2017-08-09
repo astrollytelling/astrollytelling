@@ -54,8 +54,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
         var slider = svgSlider.append("g")
             .attr("class", "slider")
-            .attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
-
+            .attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")")
 
         xSlider.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
             .range([0, widthSlider - 2 * radiusSlider])
@@ -262,7 +261,8 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
         };
 
         tipMap.html(function (d) {
-            return "<table><tr><th>Phase:</th><th> " + getPhaseLabel(data.phase[d]) + "</th></tr>" +
+            var description_text = _.where(description, {phase_number: ""+data.phase[d]})[0];
+            return "<table><tr><th>Phase:</th><th> " + description_text.phase_name_abb + "</th></tr>" +
                 "<th>Luminosity:</th><th> " + d3.format(",")(getPropertyText(10**data.log_L[d])) + " L<sub>&#9737</sub></th></tr>" +
                 "<th>Temperature:</th><th> " + d3.format(",")((10**data.log_Teff[d]).toFixed(0)) + " K</th></tr>" +
                 "<th>Radius:</th><th> " + getPropertyText(10**data.log_R[d]) + " R<sub>&#9737</sub></th></tr>" +

@@ -49,6 +49,64 @@ body {
 .wrapper-viz {
   height: 300vh;
 }
+#scroll span{
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-left: 1.5px solid #fff;
+  border-bottom: 1.5px solid #fff;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  -webkit-animation: scroll01 2s infinite;
+  animation: scroll01 2s infinite;
+  opacity: 0;
+  box-sizing: border-box;
+}
+#scroll span:nth-of-type(1) {
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}
+#scroll span:nth-of-type(2) {
+  bottom: 66px;
+  -webkit-animation-delay: .15s;
+  animation-delay: .15s;
+}
+#scroll span:nth-of-type(3) {
+  bottom: 82px;
+  -webkit-animation-delay: .3s;
+  animation-delay: .3s;
+}
+@-webkit-keyframes scroll01 {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes scroll01 {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.wrapper-title{
+  background-image: url("../img/bg.jpg");
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
 /* The sticky */
 .content,
@@ -57,6 +115,7 @@ body {
   position: -webkit-sticky;
   position: sticky;
   top: 15px;
+  left: 0;
 }
 
 .content {
@@ -84,9 +143,14 @@ body {
 }
 
 #title-viz{
+  position: relative;
   width: 100vw;
   text-align: center;
-  top: 50vh;
+  top: 45vh;
+  color: #ddd;
+}
+#title-viz a{
+  color: #63d4ff;
 }
 
 .section-title{
@@ -121,6 +185,12 @@ header {
   width: 100vw;
   margin:0 0;
 }
+
+#left-col,
+#right-col {
+  width: 47vw;
+  text-align: justify;
+}
 #left-col {
   float: left;
   padding: 20px 0px 20px 20px;
@@ -128,15 +198,8 @@ header {
 }
 #right-col {
   float: right;
-  width: 45vw;
   padding: 20px 20px 20px 0px;
 }
-#left-col,
-#right-col {
-  width: 45vw;
-  text-align: justify;
-}
-
 
 #star-text {
   padding: 50px 10px 10px 50px;
@@ -152,6 +215,11 @@ header {
 
 #phase-diagram {
   text-align: center;
+}
+
+#content-viz svg{
+  display: block;
+  margin: auto;
 }
 
 .text-mass,
