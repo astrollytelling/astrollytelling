@@ -66,6 +66,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             .clamp(true);
 
         var phases = _.uniq(data.phase);
+        phases.splice(phases.indexOf(5), 1); // remove phase 5, which was merged with phase 4
         var phasesTicks = phases.map(function (e) {
             return ageToIndex.invert(data.phase.indexOf(e));
         });
@@ -127,8 +128,6 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             .attr("transform", "translate(" + marginHR.left + "," + marginHR.top + ")")
             .call(tipMap);
 
-        var dot = svgHR.selectAll(".dot");
-
         var body = d3.select('body').node();
         var container = d3.select('#container-viz');
         var content = d3.select('#content-viz');
@@ -137,7 +136,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
         /* Scroll to index */
         var scrollScale = d3.scaleLinear()
-            .domain([0, window.innerHeight]) // This should be height(wrapper) - 100vh or something like that
+            .domain([0, scroll_length])
             .range([0, data.star_age.length - 1])
             .clamp(true);
 
@@ -253,6 +252,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
         /* Star */
 
+        // Tool tip
         var getPropertyText = function (d) {
             if (d > 1) {
                 return d.toFixed(0)
@@ -270,6 +270,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                 "<th>Age:</th><th> " + d3.format(",")((data.star_age[d]).toFixed(0)) + " yr</th></tr></table>"
 
         });
+
+        // Star
+        var dot = svgHR.selectAll(".dot");
 
         dot.data([0])
             .enter().append("circle")
@@ -301,7 +304,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             phase_text = d3.selectAll("#phase-text"),
             phase_diagram = d3.selectAll("#phase-diagram");
 
-        phase_subtitle.html("<h3>" + phase_description.phase_name + "(" +phase_description.phase_name_abb+ ") </h3>");
+        phase_subtitle.html("<h3>" + phase_description.phase_name + " (" +phase_description.phase_name_abb+ ") </h3>");
         phase_text.html(phase_description.description);
         phase_diagram.selectAll("img")
             .attr("src","img/"+phase_description.phase_name_abb+".png");
@@ -321,7 +324,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             height = window.innerHeight;
             scroll_length = content.node().getBoundingClientRect().height - height;
 
-            scrollScale.domain([0, window.innerHeight]); // double check this for other values
+            scrollScale.domain([0, scroll_length]);
         };
 
         var render = function () {
@@ -345,13 +348,13 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                             .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
                     }
 
+                    // Update stelalr track
                     line.x(function (d) {
                             return x(10**data.log_Teff[d])
                         })
                         .y(function (d) {
                             return y(10**data.log_L[d])
                         });
-
 
                     svgHR.selectAll(".stellar-track")
                         .attr("d", line);
@@ -366,6 +369,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                         .attr("opacity", 0.5)
                         .attr("d", line);
 
+                    // Update star
                     svgHR.selectAll("#offset-0")
                         .attr("offset", "0%")
                         .attr("stop-color", function (d) {
@@ -397,8 +401,9 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                         })
                         .style("fill", "url(#gradOffset)");
 
+                    // Update phase description
                     phase_description = _.where(description, {phase_number: ""+phase})[0]
-                    phase_subtitle.html("<h3>" + phase_description.phase_name + "</h3>");
+                    phase_subtitle.html("<h3>" + phase_description.phase_name + " (" + phase_description.phase_name_abb + ")</h3>");
                     phase_text.html(phase_description.description);
                     phase_diagram.selectAll("img").attr("src","img/"+phase_description.phase_name_abb+".png");
 
@@ -412,6 +417,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                             return "Age: " + d3.format(",")(data.star_age[d].toFixed(0)) + " years"
                         });
 
+                    // Update handle
                     handle.attr("cx", xSlider(ageToIndex.invert(idx)))
                         .style("fill", "url(#gradOffset)");
 
