@@ -47,6 +47,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
         /* Slider */
 
         var svgSlider = svg.append("svg")
+            .attr("id", "svgSlider")
             .attr("width", widthSlider + marginSlider.left + marginSlider.right)
             .attr("height", heightSlider + marginSlider.top + marginSlider.bottom)
             .append("g")
@@ -54,7 +55,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
 
         var slider = svgSlider.append("g")
             .attr("class", "slider")
-            .attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")")
+            .attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
 
         xSlider.domain([data.star_age[0], data.star_age[data.star_age.length - 1]])
             .range([0, widthSlider - 2 * radiusSlider])
@@ -121,6 +122,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
         /* HR diagram */
 
         var svgHR = svg.append("svg").datum(data)
+            .attr("id", "svgHR")
             .attr("width", width + marginHR.left + marginHR.right)
             .attr("height", height + marginHR.top + marginHR.bottom)
             .append("g")
@@ -320,17 +322,62 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
             });
 
         var setDimensions = function () {
-            width = window.innerWidth / 2;
-            height = window.innerHeight;
-            scroll_length = content.node().getBoundingClientRect().height - height;
+
+            width = window.innerWidth * 11/20;
+            height = window.innerHeight * 4/5;
+
+            scroll_length = content.node().getBoundingClientRect().height - window.innerHeight;
 
             scrollScale.domain([0, scroll_length]);
+
+            /* Responsive HR */
+
+            d3.select("#svgHR")
+                .attr("width", width + marginHR.left + marginHR.right)
+                .attr("height", height + marginHR.top + marginHR.bottom);
+
+            x.range([0, width]);
+            y.range([height, 0]);
+
+            svgHR.selectAll(".axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+
+            svgHR.selectAll(".axis--y")
+                .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
+
+            svgHR.selectAll(".text-temperature")
+                .attr("x", width)
+                .attr("y", height);
+
+            svgHR.selectAll(".text-mass")
+                .attr("y", height);
+
+            svgHR.selectAll(".text-age")
+                .attr("y", height);
+
+            svgHR.selectAll(".dot")
+                .attr("cx", function (d) {
+                    return x(10**data.log_Teff[d])
+                })
+                .attr("cy", function (d) {
+                    return y(10**data.log_L[d])
+                });
+
+            line.x(function (d) {
+                    return x(10**data.log_Teff[d])
+                })
+                .y(function (d) {
+                    return y(10**data.log_L[d])
+                });
+
+            svgHR.selectAll(".stellar-track")
+                .attr("d", line);
         };
 
         var render = function () {
             if (scrollTop !== newScrollTop) {
                 scrollTop = newScrollTop;
-
 
                 if (content.node().getBoundingClientRect().top < 0) {
 
@@ -348,7 +395,7 @@ d3.json("data/00140M_evol_track.json", function(error, data) {
                             .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
                     }
 
-                    // Update stelalr track
+                    // Update stellar track
                     line.x(function (d) {
                             return x(10**data.log_Teff[d])
                         })

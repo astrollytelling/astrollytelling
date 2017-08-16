@@ -114,7 +114,7 @@ body {
   float: left;
   position: -webkit-sticky;
   position: sticky;
-  top: 15px;
+  top: 0;
   left: 0;
 }
 
@@ -134,7 +134,7 @@ body {
 }
 
 #sticky-text{
-  padding: 20px 20px 20px 50px;
+  padding: 20px 0px 0px 50px;
   height: 95vh;
 }
 
@@ -153,25 +153,29 @@ body {
   color: #63d4ff;
 }
 
-.section-title{
+.section-title h2{
   width: 100%;
   text-align: center;
+  font-size: 2.5vw;
 }
 
-h1 {
-  font-family: 'Exo 2', sans-serif;
-  font-weight: 700;
-  text-align: center;
-}
 
 header {
   padding: 0px 0px;
+}
+
+#title h1{
+  font-size: 3vw;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 700;
+  text-align: center;
 }
 
 #subtitle{
   font-family: 'Lato', sans-serif;
   text-align: center;
   font-style: italic;
+  font-size:1vw;
 }
 
 #notes{
@@ -184,6 +188,7 @@ header {
   padding: 30px 10px 10px 30px;
   width: 100vw;
   margin:0 0;
+  font-size: 1vw;
 }
 
 #left-col,
@@ -206,11 +211,13 @@ header {
 }
 
 #phase-subtitle h3 {
-  padding: 20px 0px 10px 0px;
+  padding: 20px 0px 0px 0px;
+  font-size: 1.5vw;
 }
 
 #phase-text{
   text-align: justify;
+  font-size: 1vw;
 }
 
 #phase-diagram {
@@ -222,8 +229,9 @@ header {
   display: block;
   max-width: 400px;
   max-height: 400px;
-  width: auto;
-  height: auto;
+  width: 30vw;
+  height: 30vw;
+  vertical-align: middle;
 }
 
 #content-viz svg{
@@ -233,7 +241,12 @@ header {
 
 .text-mass,
 .text-age {
-  font-size: 14px;
+  font-size: 1vw;
+}
+
+.text-temperature,
+.text-luminosity {
+  font-size: 0.8vw;
 }
 
 .axis,
