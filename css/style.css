@@ -185,18 +185,22 @@ header {
 }
 
 #intro-text {
-  padding: 30px 10px 10px 30px;
-  width: 100vw;
+  padding: 20px 0px 0px 50px;
   margin:0 0;
   font-size: 1vw;
+  text-align: justify;
 }
 
-#left-col,
-#right-col {
+#intro-viz{
+  font: 10px sans-serif;
+}
+
+.left-col,
+.right-col {
   width: 47vw;
   text-align: justify;
 }
-#left-col {
+.left-col {
   float: left;
   padding: 20px 0px 20px 20px;
 
