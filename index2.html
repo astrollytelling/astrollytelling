@@ -1,0 +1,159 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stellar Evolution</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/scroller.css">
+    <link href='https://fonts.googleapis.com/css?family=Exo+2:400,700|Lato:400,300italic,700' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <div id="bg-img"></div>
+    <div class="container">
+        <div id='graphic'>
+            <div id='sections'>
+                <section class="step">
+                </section>
+                <section class="step">
+                    <p>Stars are ubiquitous objects in our Universe.</p>
+                </section>
+                <section class="step">
+                    Many Sun-like and low-mass stars are at the centers of rich exoplanet systems discovered in recent
+                    years.
+                </section>
+                <section class="step">
+                    ...and the rarest, most massive stars end their lives through spectacular supernovae explosions.
+                </section>
+                <section class="step">
+                    Populations of stars residing in galaxies like our own Milky Way not only emit most of the light
+                    we observe from the distant Universe
+                </section>
+                <section class="step">
+                    but they also play a major role in shaping their environments,
+                    ultimately influencing the evolution of galaxies through cosmic time.
+                </section>
+                <section class="step">
+                    In order to better understand and interpret these systems and phenomena, we need to improve our
+                    understanding of what is at the heart of it all: stars, and in particular, how different types of
+                    stars evolve over time.
+                </section>
+                <section class="step">
+                    Fundamentally speaking, stars are simple, gravitationally- bound balls of gas powered by nuclear
+                    fusion. We run computer simulations to model their evolution, which we can then compare to
+                    observations. Any discrepancies can be investigated in more depth and what we learn from this
+                    process can be used to help improve the models.
+                </section>
+                <section class="step">
+                    The following page will guide you through the life of a star that is only slightly more massive
+                    than our own Sun.
+                </section>
+                <section class="step">
+                    We will use something known as the Hertzsprung-Russell diagram (HR-diagram) to guide our
+                    exploration.
+                </section>
+                <section class="step">
+                    The HR-diagram is a graph that shows the brightness of a star (luminosity) on the y-axis and the
+                    temperature of the star on the x-axis.
+                </section>
+                <section class="step" id="star-evol">
+                    Since the star's brightness and temperature change over the course of its lifetime, we can graph
+                    its life trajectory on the HR-diagram.
+                </section>
+                <section class="step">
+                    The HR-diagram is a powerful visualization and diagnostic tool frequently used by stellar
+                    astronomers. Different types of stars show similar trends and behaviors when placed on the
+                    HR-diagram, and we can make use of that fact to draw some physical meaning and intuition.
+                </section>
+                <section class="step" id="PMS">
+                    <div class="title">Pre-Main Sequence</div>
+                    On the PMS, the star undergoes contraction as it descends the nearly vertical track on the
+                    Hertzsprung-Russell diagram known as the Hayashi track. The central density and temperature are
+                    not sufficiently high at this stage for hydrogen fusion to take place in the center. All PMS
+                    stars start out as fully-convective (energy is transported by large-scale turbulent motions, akin
+                    to boiling water) objects, but for those that are more massive than ~0.3 Msun, a radiative region
+                    (energy is carried away by photons) develops in the interior as they approach the MS
+                </section>
+                <section class="step" id="MS">
+                    <div class="title">Main Sequence</div>
+                    The MS phase is the longest-lived stage of evolution leading up to the formation of a white dwarf.
+                    For the Sun, this is expeced to last ~10 billion years. On the MS, the star steadily fuses
+                    hydrogen to helium, which generates thermal energy and provides support against gravity.
+                    Hydrogen-fusion occurs primarily via proton-proton chain for stars like the Sun, but in more
+                    massive stars, the CNO-cycle dominates. Moreover, this process takes place in a radiative core
+                    for stars like the Sun, but for more massive stars, it occurs in a convective core instead. Stars
+                    harboring convective cores show a characteristic 'hook' morphology as they leave the MS.
+                </section>
+                <section class="step" id="RGB">
+                    <div class="title">Red Giant Branch</div>
+                    Once the star runs out of its hydrogen fuel in the center, it can no longer produce enough energy
+                    to hold up its own weight. As a result, the helium core begins to contract, releasing gravitational
+                    energy in the process. This extra energy is deposited outside the helium core, which heats up the
+                    layer and triggers hydrogen fusion in a shell. This so-called shell-burning is accompanied by an
+                    expanding, cool, convective outer envelope. The star is now a red giant star and it continues to
+                    become brighter and larger at a roughly constant temperature, tracing its path upward the Hayashi
+                    track. This phase is expected to last only ~1.5 billion years for the Sun.
+                </section>
+                <section class="step" id="CHeB">
+                    <div class="title">Core Helium Burning</div>
+                    During the RGB phase, hydrogen shell-burning deposits freshly-fused helium on the inert helium
+                    core as it continues to contract, making it both denser and more massive. Eventually, the core
+                    becomes massive, dense, and hot enough for the onset of helium fusion. In stars below ~2 Msun,
+                    ignition proceeds violently through a phenomenon known as the helium flash: the helium core is so
+                    dense that the most central region becomes degenerate, which suffers an unstable, explosive
+                    thermonuclear runaway reaction with the sudden ignition of helium. In stars above ~2 Msun, helium
+                    ignites in a non-degenerate core and thus proceeds in a quiescent manner. Regardless of the
+                    ignition condition, the star leaves the Hayashi track and is no longer a red giant, and helium
+                    fusion ensues along with hydrogen shell-burning beyond the core. This phase is expected to last
+                    only ~0.1 billion years for the Sun.
+                </section>
+                <section class="step" id="AGB">
+                    <div class="title">Asymptotic Giant Branch</div>
+                    Eventually, the star runs out of helium fuel in the center. The carbon/oxygen core contracts and
+                    the outer layers expand to form an AGB star, analogous to the RGB phase. In stars less massive
+                    than ~8 Msun, the core cannot become dense and hot enough for carbon and oxygen to fuse into
+                    heavier elements, and the central regions become degenerate. However, the contracting core releases
+                    gravitational energy and heats up the layer above the carbon/oxygen core, which sets of helium
+                    shell-burning. In turn, helium shell-burning deposits energy in the hydrogen layer above,
+                    triggering hydrogen shell-burning as well. Throughout the AGB phase, hydrogen and helium
+                    shell-burning alternate, giving rise to the well-known thermal pulses. These pulses are associated
+                    with dense winds and a rich array of heavy elements synthesized through successive
+                    neutron-captures called the s-process. Eventually, the AGB star sheds its envelope entirely,
+                    leaving behind its hot carbon/oxygen core.
+                </section>
+                <section class="step" id="PAGB+WD">
+                    <div class="title">Post-Asymptotic Giant Branch + White Dwarf</div>
+                    At this post-AGB phase, the bare, degenerate core is shrouded deep inside shells of gas it ejected
+                    during the AGB phase. The core is hot and thus produces copious amounts of high energy photons
+                    that ionize and light up the surrounding gas. Observationally, these objects correspond to
+                    planetary nebulae. Though initially very hot, the central object quickly cools and can no longer
+                    light up the surrounding gas that is also gradually dispersing into the interstellar medium. The
+                    compact, central object that is left behind is now a white dwarf, which is supported against
+                    gravity by electron degeneracy pressure. White dwarfs are notable for their incredibly high
+                    density: approximately a solar mass's worth of material is packed inside a sphere the size of the
+                    Earth.
+                </section>
+                <section class="step">
+                </section>
+            </div>
+            <div id='vis'></div>
+            <div id="extra-space"></div>
+        </div>
+    </div>
+
+    <!-- Load JS libraries: jQuery, bootstrap, D3, D3 tooltip -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/d3.min.js"></script>
+    <script src="js/d3-scale-chromatic.min.js"></script>
+    <script src="js/d3.tip.js"></script>
+    <script src="js/queue.v1.min.js"></script>
+    <script src="js/colorbrewer.js"></script>
+    <script src="js/underscore-min.js"></script>
+    <script src="js/scroller.js"></script>
+
+    <!-- Your implementation -->
+    <script src="js/main2.js"></script>
+</body>
+</html>
