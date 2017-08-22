@@ -1,6 +1,8 @@
 var scrollVis = function (evolution, description, stars, indices) {
 
-    var margin = {top: 40, right: 40, bottom: 40, left: 50},
+    /* HR diagram definitions */
+
+    var margin = {top: 40, right: 40, bottom: 60, left: 50},
         width = window.innerWidth * 11/20,
         height = window.innerHeight * 4/5;
 
@@ -15,11 +17,31 @@ var scrollVis = function (evolution, description, stars, indices) {
         return d3.interpolateRdYlBu(1 + value);
     };
 
+    /* Slider definitions */
+
+    var	marginSlider = {top: 10, right: 100, bottom: 10, left: 50},
+        widthSlider = window.innerWidth * 2 / 5,
+        heightSlider = margin.top,
+        radiusSlider = 9;
+
+    var xSlider = d3.scaleLinear().range([0, widthSlider - 2 * radiusSlider]).clamp(true),
+        ageToIndex = d3.scaleLinear().clamp(true),
+        phases,
+        phasesTicks;
+
+    /* Tooltip */
+
+    var tipMap = d3.tip().attr('class', 'd3-tip');
+
+    /* Other definitions */
+
     var lastIndex = -1;
     var activeIndex = 0;
 
-    var svg = null;
-    var g = null;
+    var svg = null,
+        g = null,
+        svgSlider = null,
+        slider = null;
 
     var activateFunctions = [],
         updateFunctions = [];
@@ -28,24 +50,45 @@ var scrollVis = function (evolution, description, stars, indices) {
 
     var chart = function (selection) {
         selection.each(function (rawData) {
-            // create svg and give it a width and height
-            svg = d3.select(this).selectAll('svg').data([rawData]);
-            var svgE = svg.enter().append('svg');
-            // @v4 use merge to combine enter and existing selection
-            svg = svg.merge(svgE);
 
+            /* Slider svg */
+
+            svgSlider = d3.select(this).selectAll('#vis').data([rawData]);
+            svgE = svgSlider.enter().append('svg');
+            svgSlider = svgSlider.merge(svgE);
+            svgSlider.attr('width', widthSlider + marginSlider.left + marginSlider.right);
+            svgSlider.attr('height', heightSlider + marginSlider.top + marginSlider.bottom);
+
+            slider = svgSlider.append("g")
+                .attr("class", "slider")
+                .attr("transform", "translate(" + (marginSlider.left + (width - widthSlider)/2)+ "," + heightSlider / 2 + ")");
+
+            xSlider.domain([rawData.star_age[0], rawData.star_age[rawData.star_age.length - 1]]);
+            ageToIndex.domain([rawData.star_age[0], rawData.star_age[rawData.star_age.length - 1]])
+                .range([0, rawData.star_age.length - 1]);
+
+            phases = _.uniq(rawData.phase);
+            phasesTicks = phases.map(function (e) {
+                return ageToIndex.invert(rawData.phase.indexOf(e));
+            });
+
+            /* HR diagram svg */
+
+            svg = d3.select(this).selectAll('#vis').data([0]);
+            var svgE = svg.enter().append('svg');
+            svg = svg.merge(svgE);
             svg.attr('width', width + margin.left + margin.right);
             svg.attr('height', height + margin.top + margin.bottom);
 
-            svg.append('g');
-
-            g = svg.select('g')
-                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+            g = svg.append('g')
+                .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+                .call(tipMap);
 
             x.domain([10**3.9, 10**(d3.extent(rawData.log_Teff)[0] - 0.1)]);
             y.domain([10**(-1.5), 10**(d3.extent(rawData.log_L)[1] + 0.2)]);
             r.domain([d3.extent(rawData.log_R)[0], d3.extent(rawData.log_R)[1]]);
-            //scrollScale.range([0, rawData.star_age.length - 1]);
+
+            /* Do the rest */
 
             setupVis(rawData);
 
@@ -55,6 +98,57 @@ var scrollVis = function (evolution, description, stars, indices) {
     
     var setupVis = function(evolution) {
 
+        /* Slider */
+
+        slider.append("line")
+            .attr("class", "track")
+            .attr("x1", xSlider.range()[0])
+            .attr("x2", xSlider.range()[1])
+            .select(function () {
+                return this.parentNode.appendChild(this.cloneNode(true));
+            })
+            .attr("class", "track-inset")
+            .select(function () {
+                return this.parentNode.appendChild(this.cloneNode(true));
+            })
+            .attr("class", "track-overlay");
+        slider.append("g")
+            .selectAll("line")
+            .data(phasesTicks)
+            .enter().append("line")
+            .attr("class", "track-ticks")
+            .attr("x1", function (d) {
+                return xSlider(d);
+            })
+            .attr("x2", function (d) {
+                return xSlider(d);
+            })
+            .attr("y1", 0)
+            .attr("y2", 5);
+        slider.insert("g", ".track-overlay")
+            .attr("class", "ticks")
+            .attr("transform", "translate(0," + 2 * radiusSlider + ")")
+            .selectAll("text")
+            .data(phasesTicks)
+            .enter().append("text")
+            .attr("x", function (d) {
+                return xSlider(d);
+            })
+            .attr("text-anchor", "middle")
+            .text(function (d, idx) {
+                var phase_name = ['PMS', 'MS', 'RGB', 'CHeB', 'AGB', 'PAGB+WD'];
+                return phase_name[idx];
+            });
+
+        var handle = slider.insert("circle", ".track-overlay")
+            .attr("class", "handle")
+            .attr("r", radiusSlider);
+        handle.style("fill", "url(#gradOffset)");
+
+        slider.attr("opacity", 0);
+
+        /* HR diagram */
+
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
@@ -62,8 +156,7 @@ var scrollVis = function (evolution, description, stars, indices) {
         g.append("g")
             .attr("class", "axis axis--y")
             .attr("transform", "translate(0,0)")
-            .call(d3.axisLeft(y).ticks(5)
-                .tickFormat(d3.format("")));
+            .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
         g.selectAll(".axis").attr("opacity", 0);
 
         g.append("text")
@@ -160,7 +253,29 @@ var scrollVis = function (evolution, description, stars, indices) {
             });
         gradientOffset.style("opacity", 0);
 
-        // Star
+        /* Star */
+
+        // Tool tip
+        var getPropertyText = function (d) {
+            if (d > 1) {
+                return d.toFixed(0)
+            } else {
+                return d.toFixed(2)
+            }
+        };
+
+        tipMap.html(function (d) {
+            var description_text = _.where(description, {phase_number: ""+evolution.phase[d]})[0];
+            return "<table><tr><th>Phase:</th><th> " + description_text.phase_name_abb + "</th></tr>" +
+                "<th>Luminosity:</th><th> " + d3.format(",")(getPropertyText(10**evolution.log_L[d])) + " L<sub>&#9737</sub></th></tr>" +
+                "<th>Temperature:</th><th> " + d3.format(",")((10**evolution.log_Teff[d]).toFixed(0)) + " K</th></tr>" +
+                "<th>Radius:</th><th> " + getPropertyText(10**evolution.log_R[d]) + " R<sub>&#9737</sub></th></tr>" +
+                "<th>Mass:</th><th> " + (evolution.star_mass[d]).toFixed(4) + " M<sub>&#9737</sub></th></tr>" +
+                "<th>Age:</th><th> " + d3.format(",")((evolution.star_age[d]).toFixed(0)) + " yr</th></tr></table>"
+
+        });
+
+        // Dot element
         var dot = g.selectAll(".dot");
 
         dot.data([0])
@@ -175,16 +290,16 @@ var scrollVis = function (evolution, description, stars, indices) {
             .attr("r", function (d) {
                 return r(10**evolution.log_R[d])
             })
-            .attr("fill", "url(#gradOffset)");
-            /*.on('mouseover', function (d) {
-                tipMap.offset([r(10**data.log_R[d]) - 10, 0])
+            .attr("fill", "url(#gradOffset)")
+            .on('mouseover', function (d) {
+                tipMap.offset([r(10**evolution.log_R[d]) - 10, 0])
                     .show(d);
                 d3.select(this).attr("stroke-width", "3px");
             })
             .on('mouseout', function (d) {
                 tipMap.hide(d);
                 d3.select(this).attr("stroke-width", "1px");
-            });*/
+            });
 
         g.selectAll("circle").attr("opacity", 0);
 
@@ -198,19 +313,29 @@ var scrollVis = function (evolution, description, stars, indices) {
             updateFunctions[i] = function () {};
         }
 
-        activateFunctions[0] = function() {changeBackgroundImage("img/bg.jpg");};
+        activateFunctions[0] = function() {showTitle(); changeBackgroundImage("img/bg.jpg");};
+        activateFunctions[1] = function() {hideTitle(); setBackgroundBlack();}
         activateFunctions[3] = function() {changeBackgroundImage("img/img2b_large.jpg");};
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
         activateFunctions[6] = setBackgroundBlack;
         activateFunctions[9] = hidePlot;
-        activateFunctions[10] = showPlot;
+        activateFunctions[10] = function() {hideSlider(); showPlot();};
+        activateFunctions[11] = function() {showSlider();};
         activateFunctions[12] = hideStar;
 
         for (i = 13; i < 19; i++){
             updateFunctions[i] = evolveHR;
         }
 
+    };
+
+    var showTitle = function() {
+        $("#title-viz").animate({opacity: 1}, transition_duration);
+    };
+
+    var hideTitle = function() {
+        $("#title-viz").animate({opacity: 0}, transition_duration);
     };
 
     var setBackgroundBlack = function() {
@@ -236,6 +361,16 @@ var scrollVis = function (evolution, description, stars, indices) {
     function hidePlot() {
         hideAxis();
         hidePlotText();
+    }
+
+    function showSlider() {
+        slider.transition().duration(transition_duration)
+            .attr("opacity", 1)
+    }
+
+    function hideSlider() {
+        slider.transition().duration(transition_duration)
+            .attr("opacity", 0)
     }
 
     function showPlotText() {
@@ -293,12 +428,10 @@ var scrollVis = function (evolution, description, stars, indices) {
                 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
             g.selectAll(".axis--x")
                 .call(d3.axisBottom(x).tickValues([3000, 5000, 10000, 30000, 50000, 100000]).tickFormat(d3.format("")));
-            console.log('si, 6')
         } else {
             x.domain([10**(3.9), 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
             g.selectAll(".axis--x")
                 .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
-            console.log("no, otro")
         }
 
         line.x(function (d) {
@@ -307,9 +440,6 @@ var scrollVis = function (evolution, description, stars, indices) {
             .y(function (d) {
                 return y(10**evolution.log_L[d])
             });
-
-        g.selectAll(".stellar-track")
-            .attr("d", line);
 
         g.selectAll(".stellar-track")
             .datum(d3.range(this_idx))
@@ -364,6 +494,11 @@ var scrollVis = function (evolution, description, stars, indices) {
             .html(function (d) {
                 return "Age: " + d3.format(",")(evolution.star_age[d].toFixed(0)) + " years"
             });
+
+        // Update handle
+        slider.selectAll(".handle")
+            .attr("cx", xSlider(ageToIndex.invert(this_idx)))
+            .style("fill", "url(#gradOffset)");
     }
 
     chart.activate = function (index) {
