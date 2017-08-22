@@ -21,6 +21,7 @@ body{
   text-align: center;
   top: 45vh;
   color: #ddd;
+  z-index: 100;
 }
 #title-viz a{
   color: #63d4ff;
