@@ -46,7 +46,7 @@ var scrollVis = function (evolution, description, stars, indices) {
     var activateFunctions = [],
         updateFunctions = [];
 
-    var transition_duration = 500;
+    var transition_duration = 200;
 
     var chart = function (selection) {
         selection.each(function (rawData) {
@@ -310,11 +310,11 @@ var scrollVis = function (evolution, description, stars, indices) {
         activateFunctions[3] = function() {changeBackgroundImage("img/img2b_large.jpg");};
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
-        activateFunctions[6] = setBackgroundBlack;
-        activateFunctions[9] = hidePlot;
-        activateFunctions[10] = function() {hideSlider(); showPlot();};
-        activateFunctions[11] = function() {showSlider();};
-        activateFunctions[12] = hideStar;
+        activateFunctions[6] = function() {setBackgroundBlack();};
+        activateFunctions[9] = function() {setBackgroundBlack(); hidePlot();};
+        activateFunctions[10] = function() {setBackgroundBlack(); hideSlider(); showPlot();};
+        activateFunctions[11] = function() {setBackgroundBlack();showSlider();};
+        activateFunctions[12] = function() {setBackgroundBlack(); hideStar();};
 
         for (i = 13; i < 19; i++){
             updateFunctions[i] = evolveHR;
