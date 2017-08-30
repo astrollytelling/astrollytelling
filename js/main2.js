@@ -2,8 +2,8 @@ var scrollVis = function (evolution, description, stars, indices) {
 
     /* HR diagram definitions */
 
-    var margin = {top: 40, right: 40, bottom: 60, left: 50},
-        width = window.innerWidth * 11/20,
+    var margin = {top: window.innerHeight/25, right: window.innerWidth/20, bottom: window.innerHeight/25, left: window.innerWidth/20},
+        width = window.innerWidth * 1/2,
         height = window.innerHeight * 4/5;
 
     var x = d3.scaleLog().range([0, width]),
@@ -19,7 +19,7 @@ var scrollVis = function (evolution, description, stars, indices) {
 
     /* Slider definitions */
 
-    var	marginSlider = {top: 10, right: 100, bottom: 10, left: 50},
+    var	marginSlider = {top: 10, right: window.innerWidth * 1/10, bottom: 10, left: window.innerWidth * 1/10},
         widthSlider = window.innerWidth * 2 / 5,
         heightSlider = margin.top,
         radiusSlider = 9;
@@ -61,7 +61,7 @@ var scrollVis = function (evolution, description, stars, indices) {
 
             slider = svgSlider.append("g")
                 .attr("class", "slider")
-                .attr("transform", "translate(" + (marginSlider.left + (width - widthSlider)/2)+ "," + heightSlider / 2 + ")");
+                .attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
 
             xSlider.domain([rawData.star_age[0], rawData.star_age[rawData.star_age.length - 1]]);
             ageToIndex.domain([rawData.star_age[0], rawData.star_age[rawData.star_age.length - 1]])
@@ -104,14 +104,6 @@ var scrollVis = function (evolution, description, stars, indices) {
             .attr("class", "track")
             .attr("x1", xSlider.range()[0])
             .attr("x2", xSlider.range()[1])
-            .select(function () {
-                return this.parentNode.appendChild(this.cloneNode(true));
-            })
-            .attr("class", "track-inset")
-            .select(function () {
-                return this.parentNode.appendChild(this.cloneNode(true));
-            })
-            .attr("class", "track-overlay");
         slider.append("g")
             .selectAll("line")
             .data(phasesTicks)
@@ -163,14 +155,14 @@ var scrollVis = function (evolution, description, stars, indices) {
             .attr("x", 10)
             .attr("dy", "0.75em")
             .attr("class", "text-plot text-luminosity")
-            .attr("transform", "rotate (-90) translate(-150,5)")
+            .attr("transform", "translate(5," + (margin.top * 5.5) + ") rotate(-90)")
             .html("Luminosity (Solar Luminosity)");
         g.append("text")
             .attr("x", width)
             .attr("y", height)
             .attr("dy", "0.75em")
             .attr("class", "text-plot text-temperature")
-            .attr("transform", "translate(-100,-15)")
+            .attr("transform", "translate(-" + (margin.left * 2) + ",-15)")
             .html("Temperature (Kelvin)");
         g.append("text")
             .data([0])
@@ -314,7 +306,7 @@ var scrollVis = function (evolution, description, stars, indices) {
         }
 
         activateFunctions[0] = function() {showTitle(); changeBackgroundImage("img/bg.jpg");};
-        activateFunctions[1] = function() {hideTitle(); setBackgroundBlack();}
+        activateFunctions[1] = function() {hideTitle(); setBackgroundBlack();};
         activateFunctions[3] = function() {changeBackgroundImage("img/img2b_large.jpg");};
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
@@ -514,6 +506,86 @@ var scrollVis = function (evolution, description, stars, indices) {
     chart.update = function (index, progress) {
         updateFunctions[index](progress, index);
     };
+    
+    var setDimensions = function() {
+
+        // HR
+        margin = {top: window.innerHeight/25, right: window.innerWidth/20, bottom: window.innerHeight/25, left: window.innerWidth/20};
+        width = window.innerWidth * 1/2;
+        height = window.innerHeight * 4/5;
+
+        svg.attr('width', width + margin.left + margin.right);
+        svg.attr('height', height + margin.top + margin.bottom);
+
+        x.range([0, width]);
+        y.range([height, 0]);
+
+        g.selectAll(".axis--x")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+
+        g.selectAll(".axis--y")
+            .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
+
+        g.selectAll(".text-temperature")
+            .attr("x", width)
+            .attr("y", height);
+
+        g.selectAll(".text-mass")
+            .attr("y", height);
+
+        g.selectAll(".text-age")
+            .attr("y", height);
+
+        g.selectAll(".dot")
+            .attr("cx", function (d) {
+                return x(10**evolution.log_Teff[d])
+            })
+            .attr("cy", function (d) {
+                return y(10**evolution.log_L[d])
+            });
+
+        line.x(function (d) {
+                return x(10**evolution.log_Teff[d])
+            })
+            .y(function (d) {
+                return y(10**evolution.log_L[d])
+            });
+
+        g.selectAll(".stellar-track")
+            .attr("d", line);
+
+        // Slider
+
+        marginSlider = {top: 10, right: window.innerWidth * 1/10, bottom: 10, left: window.innerWidth * 1/10};
+        widthSlider = window.innerWidth * 2 / 5;
+        heightSlider = margin.top;
+
+        svgSlider.attr('width', widthSlider + marginSlider.left + marginSlider.right);
+        svgSlider.attr('height', heightSlider + marginSlider.top + marginSlider.bottom);
+        slider.attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
+
+        xSlider.range([0, widthSlider - 2 * radiusSlider]);
+
+        slider.selectAll(".track")
+            .attr("x1", xSlider.range()[0])
+            .attr("x2", xSlider.range()[1]);
+
+        slider.selectAll(".track-ticks")
+            .attr("x1", function (d) {
+                return xSlider(d);
+            })
+            .attr("x2", function (d) {
+                return xSlider(d);
+            });
+        slider.selectAll("text")
+            .attr("x", function (d) {
+                return xSlider(d);
+            });
+        
+    };
+
+    window.onresize = setDimensions;
 
     return chart;
 };
@@ -576,6 +648,7 @@ function initVis(error, evolution, description, stars){
     scroll.on('progress', function (index, progress) {
         plot.update(index, progress);
     });
+    
 }
 
 queue()

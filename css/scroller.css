@@ -138,28 +138,12 @@ body{
 
 /* Slider */
 
-.track,
-.track-inset,
-.track-overlay {
-  stroke-linecap: round;
-}
 
 .track {
+  stroke-linecap: round;
   stroke: #ddd;
-  stroke-opacity: 0.3;
-  stroke-width: 2px;
-}
-
-.track-inset {
-  stroke: #ddd;
+  stroke-opacity: 0.7;
   stroke-width: 1px;
-}
-
-.track-overlay {
-  pointer-events: stroke;
-  stroke-width: 50px;
-  stroke: transparent;
-  cursor: crosshair;
 }
 
 .track-ticks {
