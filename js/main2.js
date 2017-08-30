@@ -3,7 +3,7 @@ var scrollVis = function (evolution, description, stars, indices) {
     /* HR diagram definitions */
 
     var margin = {top: window.innerHeight/25, right: window.innerWidth/20, bottom: window.innerHeight/25, left: window.innerWidth/20},
-        width = window.innerWidth * 1/2,
+        width = window.innerWidth/2,
         height = window.innerHeight * 4/5;
 
     var x = d3.scaleLog().range([0, width]),
@@ -19,7 +19,7 @@ var scrollVis = function (evolution, description, stars, indices) {
 
     /* Slider definitions */
 
-    var	marginSlider = {top: 10, right: window.innerWidth * 1/10, bottom: 10, left: window.innerWidth * 1/10},
+    var	marginSlider = {top: 10, right: window.innerWidth/10, bottom: 10, left: window.innerWidth/10},
         widthSlider = window.innerWidth * 2 / 5,
         heightSlider = margin.top,
         radiusSlider = 9;
@@ -103,7 +103,7 @@ var scrollVis = function (evolution, description, stars, indices) {
         slider.append("line")
             .attr("class", "track")
             .attr("x1", xSlider.range()[0])
-            .attr("x2", xSlider.range()[1])
+            .attr("x2", xSlider.range()[1]);
         slider.append("g")
             .selectAll("line")
             .data(phasesTicks)
@@ -511,7 +511,7 @@ var scrollVis = function (evolution, description, stars, indices) {
 
         // HR
         margin = {top: window.innerHeight/25, right: window.innerWidth/20, bottom: window.innerHeight/25, left: window.innerWidth/20};
-        width = window.innerWidth * 1/2;
+        width = window.innerWidth/2;
         height = window.innerHeight * 4/5;
 
         svg.attr('width', width + margin.left + margin.right);
@@ -557,7 +557,7 @@ var scrollVis = function (evolution, description, stars, indices) {
 
         // Slider
 
-        marginSlider = {top: 10, right: window.innerWidth * 1/10, bottom: 10, left: window.innerWidth * 1/10};
+        marginSlider = {top: 10, right: window.innerWidth/10, bottom: 10, left: window.innerWidth/10};
         widthSlider = window.innerWidth * 2 / 5;
         heightSlider = margin.top;
 
@@ -602,8 +602,6 @@ function initVis(error, evolution, description, stars){
             evolution.phase[i] = 4;
         }
     });
-
-    console.log(evolution)
 
     var steps = $(".step"),
         indices = [];
