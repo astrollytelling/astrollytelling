@@ -64,6 +64,7 @@ body {
   animation: scroll01 2s infinite;
   opacity: 0;
   box-sizing: border-box;
+  visibility: hidden;
 }
 #scroll span:nth-of-type(1) {
   -webkit-animation-delay: 0s;

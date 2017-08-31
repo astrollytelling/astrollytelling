@@ -11,17 +11,29 @@
     <link href='https://fonts.googleapis.com/css?family=Exo+2:400,700|Lato:400,300italic,700' rel='stylesheet' type='text/css'>
 </head>
 <body>
-    <div id="bg-img"></div>
+    <div id="bg-img"><span></span><span></span><span></span></div>
     <div id="title-viz">
         <div id="title">
             <h1>The evolution of stars</h1>
         </div>
         <div id="subtitle">
-            A visualization by <a href="https://www.cfa.harvard.edu/~fbecerra">Fernando Becerra</a> and
+            A visualization by <a href="http://www.fernandobecerra.com">Fernando Becerra</a> and
             <a href="https://www.cfa.harvard.edu/~jchoi">Jieun Choi</a>
         </div>
     </div>
     <div class="container">
+        <div id="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#PMS" class="btn btn-circle"></a></li>
+                    <li><a href="#MS" class="btn btn-circle"></a></li>
+                    <li><a href="#RGB" class="btn btn-circle"></a></li>
+                    <li><a href="#CHeB" class="btn btn-circle"></a></li>
+                    <li><a href="#AGB" class="btn btn-circle"></a></li>
+                    <li><a href="#PAGB+WD" class="btn btn-circle"></a></li>
+                </ul>
+            </nav>
+        </div>
         <div id='graphic'>
             <div id='sections'>
                 <section class="step">
@@ -76,17 +88,17 @@
                     astronomers. Different types of stars show similar trends and behaviors when placed on the
                     HR-diagram, and we can make use of that fact to draw some physical meaning and intuition.
                 </section>
-                <section class="step" id="PMS">
+                <div class="step" id="PMS">
                     <div class="title">Pre-Main Sequence</div>
-                    On the PMS, the star undergoes contraction as it descends the nearly vertical track on the
+                    <p>On the PMS, the star undergoes contraction as it descends the nearly vertical track on the
                     Hertzsprung-Russell diagram known as the Hayashi track. The central density and temperature are
                     not sufficiently high at this stage for hydrogen fusion to take place in the center. All PMS
                     stars start out as fully-convective (energy is transported by large-scale turbulent motions, akin
                     to boiling water) objects, but for those that are more massive than ~0.3 Msun, a radiative region
-                    (energy is carried away by photons) develops in the interior as they approach the MS
+                    (energy is carried away by photons) develops in the interior as they approach the MS</p>
                     <image src="img/PMS.png"/>
-                </section>
-                <section class="step" id="MS">
+                </div>
+                <div class="step" id="MS">
                     <div class="title">Main Sequence</div>
                     The MS phase is the longest-lived stage of evolution leading up to the formation of a white dwarf.
                     For the Sun, this is expeced to last ~10 billion years. On the MS, the star steadily fuses
@@ -96,7 +108,7 @@
                     for stars like the Sun, but for more massive stars, it occurs in a convective core instead. Stars
                     harboring convective cores show a characteristic 'hook' morphology as they leave the MS.
                     <image src="img/MS.png"/>
-                </section>
+                </div>
                 <section class="step" id="RGB">
                     <div class="title">Red Giant Branch</div>
                     Once the star runs out of its hydrogen fuel in the center, it can no longer produce enough energy
@@ -167,6 +179,7 @@
     <script src="js/colorbrewer.js"></script>
     <script src="js/underscore-min.js"></script>
     <script src="js/scroller.js"></script>
+    <script src="js/jquery.scrollto.js"></script>
 
     <!-- Your implementation -->
     <script src="js/main2.js"></script>
