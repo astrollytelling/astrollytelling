@@ -175,7 +175,7 @@ a.nav-active {
   font-family: 'Lato', Arial, Helvetica, sans-serif;
   font-size: 16px;
   line-height: 23px;
-  color: #767678;
+  color: #c7c7c7;
 
 }
 
@@ -190,10 +190,10 @@ a.nav-active {
 
 #sections .title {
   font-family: 'Exo 2', Arial, Helvetica, sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: bold;
   margin-bottom: 2px;
-  color: #ddd;
+  color: #f0f0f0;
   line-height: 1.2em;
 }
 
