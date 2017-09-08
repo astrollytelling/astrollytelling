@@ -94,7 +94,7 @@ body{
 }
 
 .container {
-  width: 80vw;
+  width: 90vw;
 }
 
 #sidebar {
@@ -162,7 +162,7 @@ a.nav-active {
 #sections {
   position: relative;
   display: inline-block;
-  width: 70vw;
+  width: 80vw;
   /*top: 0px;*/
   z-index: 90;
   /*padding-bottom: 200px;*/
@@ -194,8 +194,12 @@ a.nav-active {
 
 .step.centered{
   width: 30vw;
-  margin-left: 25vw;
+  margin-left: 30vw;
   text-align: center;
+}
+
+.step.last{
+  height: 50vw;
 }
 
 #sections .title {
@@ -217,11 +221,7 @@ a.nav-active {
   position: fixed;
   z-index: 100;
   margin-left: 0;
-  /*float:left;*/
   left:40vw;
-  /* height: 600px; */
-  /* width: 600px; */
-  /* background-color: #ddd; */
 }
 
 #vis .title {
@@ -237,14 +237,15 @@ a.nav-active {
 .axis path,
 .axis line {
   fill: none;
-  stroke: #666;
+  stroke: #b7b7b7;
   shape-rendering: crispEdges;
 }
 
 .tick text,
 .text-plot{
-  stroke: #666;
-  fill: #666;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  fill: #b7b7b7;
 }
 
 .highlight {
@@ -281,7 +282,8 @@ a.nav-active {
   stroke-width: 1px;
 }
 .ticks{
-  fill: #ddd;
+  font-family: 'Lato', sans-serif;
+  fill: #b7b7b7;
 }
 
 /* Tool tip */

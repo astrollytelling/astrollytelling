@@ -211,7 +211,7 @@ var scrollVis = function (evolution, description, stars, indices) {
             .attr("x", 10)
             .attr("dy", "0.75em")
             .attr("class", "text-plot text-luminosity")
-            .attr("transform", "translate(5," + (margin.top * 5.5) + ") rotate(-90)")
+            .attr("transform", "translate(5," + (margin.top * 6) + ") rotate(-90)")
             .html("Luminosity (Solar Luminosity)");
         g.append("text")
             .attr("x", width)
@@ -356,23 +356,24 @@ var scrollVis = function (evolution, description, stars, indices) {
 
     var setupSections = function () {
 
-        for (var i = 0; i < 20; i++) {
+        for (var i = 0; i < 21; i++) {
             activateFunctions[i] = setBackgroundBlack;
             updateFunctions[i] = function () {};
         }
 
         activateFunctions[0] = function() {showTitle(); changeBackgroundImage("img/bg.jpg");};
         activateFunctions[1] = function() {hideTitle(); setBackgroundBlack();};
+        activateFunctions[2] = function() {changeBackgroundImage("img/img2a_large.jpg");};
         activateFunctions[3] = function() {changeBackgroundImage("img/img2b_large.jpg");};
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
-        activateFunctions[6] = function() {setBackgroundBlack();};
         activateFunctions[9] = function() {setBackgroundBlack(); hidePlot();};
-        activateFunctions[10] = function() {setBackgroundBlack(); hideSlider(); showPlot();};
-        activateFunctions[11] = function() {setBackgroundBlack();showSlider();};
-        activateFunctions[12] = function() {setBackgroundBlack(); hideStar();};
+        activateFunctions[10] = function() {setBackgroundBlack(); showPlot();};
+        activateFunctions[11] = function() {setBackgroundBlack();};
+        activateFunctions[12] = function() {setBackgroundBlack(); hideSlider();};
+        activateFunctions[13] = function() {setBackgroundBlack(); showSlider(); hideStar();};
 
-        for (i = 13; i < 19; i++){
+        for (i = 14; i < 20; i++){
             updateFunctions[i] = evolveHR;
         }
 
