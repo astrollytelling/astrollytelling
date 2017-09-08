@@ -1,61 +1,5 @@
 var scrollVis = function (evolution, description, stars, tracks, indices) {
 
-    /* Sidebar */
-
-    var setupSidebar = function () {
-        $(window).scroll(function () {
-            var window_top = $(window).scrollTop(); // the "12" should equal the margin-top value for nav.stick
-            var div_top = $('#graphic').offset().top;
-            if (window_top > div_top) {
-                $('nav').addClass('stick');
-            } else {
-                $('nav').removeClass('stick');
-            }
-        });
-
-        $("nav a").click(function (evn) {
-            evn.preventDefault();
-            $('html,body').scrollTo(this.hash, this.hash);
-        });
-
-        var aChildren = $("nav li").children(); // find the a children of the list items
-        var aArray = []; // create the empty aArray
-        for (var i = 0; i < aChildren.length; i++) {
-            var aChild = aChildren[i];
-            var ahref = $(aChild).attr('href');
-            aArray.push(ahref);
-        } // this for loop fills the aArray with attribute href values
-
-        $(window).scroll(function () {
-            var windowPos = $(window).scrollTop(); // get the offset of the window from the top of page
-            var windowHeight = $(window).height(); // get the height of the window
-            var docHeight = $(document).height();
-
-            for (var i = 0; i < aArray.length; i++) {
-                var theID = aArray[i];
-                var divHeight = $(theID).height(); // get the height of the div in question
-                var divPos = $(theID).offset().top - divHeight/2; // get the offset of the div from the top of page
-
-
-                if (windowPos >= divPos && windowPos < (divPos + divHeight)) {
-                    $("a[href='" + theID + "']").addClass("nav-active");
-                } else {
-                    $("a[href='" + theID + "']").removeClass("nav-active");
-                }
-            }
-
-            if (windowPos + windowHeight == docHeight) {
-                if (!$("nav li:last-child a").hasClass("nav-active")) {
-                    var navActiveCurrent = $(".nav-active").attr("href");
-                    $("a[href='" + navActiveCurrent + "']").removeClass("nav-active");
-                    $("nav li:last-child a").addClass("nav-active");
-                }
-            }
-        });
-    };
-
-    setupSidebar();
-
     /* HR diagram definitions */
 
     var margin = {top: window.innerHeight/25, right: window.innerWidth/20, bottom: window.innerHeight/25, left: window.innerWidth/20},
@@ -80,10 +24,11 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         heightSlider = margin.top,
         radiusSlider = 9;
 
-    var xSlider = d3.scaleLinear().range([0, widthSlider - 2 * radiusSlider]).clamp(true),
-        ageToIndex = d3.scaleLinear().clamp(true),
-        phases,
-        phasesTicks;
+    var phases = _.uniq(evolution.phase),
+        n_phases = phases.length,
+        step_height = $(".step").height(),
+        xSlider = d3.scaleLinear().range([0, widthSlider - 2 * radiusSlider])
+            .domain([0, n_phases * step_height]).clamp(true);
 
     /* Tooltip */
 
@@ -118,15 +63,6 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
             slider = svgSlider.append("g")
                 .attr("class", "slider")
                 .attr("transform", "translate(" + marginSlider.left + "," + heightSlider / 2 + ")");
-
-            xSlider.domain([rawData.star_age[0], rawData.star_age[rawData.star_age.length - 1]]);
-            ageToIndex.domain([rawData.star_age[0], rawData.star_age[rawData.star_age.length - 1]])
-                .range([0, rawData.star_age.length - 1]);
-
-            phases = _.uniq(rawData.phase);
-            phasesTicks = phases.map(function (e) {
-                return ageToIndex.invert(rawData.phase.indexOf(e));
-            });
 
             /* HR diagram svg */
 
@@ -163,14 +99,14 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
             .attr("x2", xSlider.range()[1]);
         slider.append("g")
             .selectAll("line")
-            .data(phasesTicks)
+            .data(d3.range(n_phases))
             .enter().append("line")
             .attr("class", "track-ticks")
             .attr("x1", function (d) {
-                return xSlider(d);
+                return xSlider(d * step_height);
             })
             .attr("x2", function (d) {
-                return xSlider(d);
+                return xSlider(d * step_height);
             })
             .attr("y1", 0)
             .attr("y2", 5);
@@ -178,16 +114,20 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
             .attr("class", "ticks")
             .attr("transform", "translate(0," + 2 * radiusSlider + ")")
             .selectAll("text")
-            .data(phasesTicks)
+            .data(d3.range(n_phases))
             .enter().append("text")
             .attr("x", function (d) {
-                return xSlider(d);
+                return xSlider((d + 1/2) * step_height);
             })
             .attr("text-anchor", "middle")
-            .text(function (d, idx) {
-                var phase_name = ['PMS', 'MS', 'RGB', 'CHeB', 'AGB', 'PAGB+WD'];
+            .html(function (d, idx) {
+                var phase_name = ['PMS', 'MS', 'RGB', 'CHeB', 'AGB', 'PAGBWD'];
                 return phase_name[idx];
-            });
+            })
+            .on("click", function(){ $('html,body').scrollTo("#"+$(this).text(), "#"+$(this).text())})
+            .on("mouseover", function() { d3.select(this).style("cursor", "pointer"); })
+            .on("mouseout", function(d) { d3.select(this).style("cursor", "default"); });
+
 
         var handle = slider.insert("circle", ".track-overlay")
             .attr("class", "handle")
@@ -426,13 +366,13 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         activateFunctions[3] = function() {changeBackgroundImage("img/img2b_large.jpg");};
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
-        activateFunctions[9] = function() {setBackgroundBlack(); hidePlot();};
-        activateFunctions[10] = function() {setBackgroundBlack(); showPlot(); hideExampleTrack(); hideTrackText();};
+        activateFunctions[9] = function() {setBackgroundBlack(); hideAxis();};
+        activateFunctions[10] = function() {setBackgroundBlack(); showAxis(); hideExampleTrack(); hideTrackText();};
         activateFunctions[11] = function() {setBackgroundBlack(); hideTracks(); showExampleTrack(); showTrackText();};
-        activateFunctions[12] = function() {setBackgroundBlack(); hideTrackText(); showPlot(); showTracks();};
-        activateFunctions[13] = function() {setBackgroundBlack(); hideTracks(); hideTrackText(); hidePlot();
+        activateFunctions[12] = function() {setBackgroundBlack(); hideTrackText(); showAxis(); showTracks();};
+        activateFunctions[13] = function() {setBackgroundBlack(); hideTracks(); hideTrackText(); hideAxis();
                                             hideSlider(); hidePlotText(); hideStar();};
-        activateFunctions[14] = function() {setBackgroundBlack(); showPlot(); showSlider(); showPlotText(); showStar();};
+        activateFunctions[14] = function() {setBackgroundBlack(); showSlider(); showPlotText(); showStar(); showAxis();};
 
         for (i = 15; i < 21; i++){
             updateFunctions[i] = evolveHR;
@@ -465,14 +405,6 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         img === 'img/bg.jpg' ? span.css("display", "block") : span.css("display", "none");
 
     };
-
-    function showPlot() {
-        showAxis();
-    }
-
-    function hidePlot() {
-        hideAxis();
-    }
 
     function showTracks() {
         x.domain([10**5.7, 10**3.2]);
@@ -593,6 +525,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         scrollScale.range(indices[idx]);
         var this_idx = Math.round(scrollScale(progress));
         var phase = evolution.phase[this_idx];
+        var idx_this_phase = _.indexOf(phases, phase);
 
         if (phase == 6) {
             x.domain([10**(Math.max(evolution.log_Teff[this_idx], 3.8, d3.extent(evolution.log_Teff.slice(0, this_idx))[1]) + 0.1),
@@ -668,7 +601,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
 
         // Update handle
         slider.selectAll(".handle")
-            .attr("cx", xSlider(ageToIndex.invert(this_idx)))
+            .attr("cx", xSlider((idx_this_phase + progress) * step_height))
             .style("fill", "url(#gradOffset)");
     }
 
@@ -752,14 +685,14 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
 
         slider.selectAll(".track-ticks")
             .attr("x1", function (d) {
-                return xSlider(d);
+                return xSlider(d * step_height);
             })
             .attr("x2", function (d) {
-                return xSlider(d);
+                return xSlider(d * step_height);
             });
         slider.selectAll("text")
             .attr("x", function (d) {
-                return xSlider(d);
+                return xSlider((d + 1/2) * step_height);
             });
         
     };
@@ -774,14 +707,6 @@ function initVis(error, evolution, description, stars, tracks){
     $(document).ready(function(){
         $(this).scrollTop(0);
     });
-
-    var tracks_length = [];
-
-    console.log(tracks[0]);
-    for(var i in Object.keys(tracks)){
-        tracks_length.push(tracks[i].log_Teff.length);
-    }
-    console.log(tracks_length)
 
     // Fix AGB for phase=5
     evolution.phase.forEach(function(d, i){
