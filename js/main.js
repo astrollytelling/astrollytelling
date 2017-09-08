@@ -1,4 +1,4 @@
-var scrollVis = function (evolution, description, stars, indices) {
+var scrollVis = function (evolution, description, stars, tracks, indices) {
 
     /* Sidebar */
 
@@ -140,8 +140,9 @@ var scrollVis = function (evolution, description, stars, indices) {
                 .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
                 .call(tipMap);
 
-            x.domain([10**3.9, 10**(d3.extent(rawData.log_Teff)[0] - 0.1)]);
-            y.domain([10**(-1.5), 10**(d3.extent(rawData.log_L)[1] + 0.2)]);
+            x.domain([10**5.7, 10**3.2]);
+            y.domain([10**(-2.3), 10**6.5]);
+
             r.domain([d3.extent(rawData.log_R)[0], d3.extent(rawData.log_R)[1]]);
 
             /* Do the rest */
@@ -200,7 +201,7 @@ var scrollVis = function (evolution, description, stars, indices) {
         g.append("g")
             .attr("class", "axis axis--x")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+            .call(d3.axisBottom(x).tickValues([2000, 4000, 10000, 20000, 40000, 100000, 200000]).tickFormat(d3.format("")));
         g.append("g")
             .attr("class", "axis axis--y")
             .attr("transform", "translate(0,0)")
@@ -210,14 +211,14 @@ var scrollVis = function (evolution, description, stars, indices) {
         g.append("text")
             .attr("x", 10)
             .attr("dy", "0.75em")
-            .attr("class", "text-plot text-luminosity")
+            .attr("class", "text-axis text-luminosity")
             .attr("transform", "translate(5," + (margin.top * 6) + ") rotate(-90)")
             .html("Luminosity (Solar Luminosity)");
         g.append("text")
             .attr("x", width)
             .attr("y", height)
             .attr("dy", "0.75em")
-            .attr("class", "text-plot text-temperature")
+            .attr("class", "text-axis text-temperature")
             .attr("transform", "translate(-" + (margin.left * 2) + ",-15)")
             .html("Temperature (Kelvin)");
         g.append("text")
@@ -240,11 +241,69 @@ var scrollVis = function (evolution, description, stars, indices) {
             .html(function (d) {
                 return "Age: " + evolution.star_age[d].toFixed(0) + " years"
             });
+        g.selectAll(".text-axis").attr("opacity", 0);
         g.selectAll(".text-plot").attr("opacity", 0);
+
+        /* Tracks */
+
+        x.domain([10**5.7, 10**3.2]);
+        y.domain([10**(-2.3), 10**6.5]);
+        for(var i in Object.keys(tracks)){
+            line.x(function (d) {
+                    return x(10**tracks[i].log_Teff[d])
+                })
+                .y(function (d) {
+                    return y(10**tracks[i].log_L[d])
+                });
+            g.append("g")
+                .datum(d3.range(tracks[i].log_Teff.length)).append("path")
+                .attr("class", "tracks")
+                .attr("id", "stellar-track-"+i)
+                .attr("fill", "none")
+                .attr("stroke", "gray")
+                .attr("stroke-linejoin", "round")
+                .attr("stroke-linecap", "round")
+                .attr("stroke-width", 1.5)
+                .attr("opacity", 0.8)
+                .attr("d", line);
+            g.selectAll(".tracks").attr("opacity", 0);
+
+            if (i == '4'){
+                g.append("text")
+                    .datum([0])
+                    .attr("x", function(d){ return x(10**tracks[i].log_Teff[d])})
+                    .attr("y", function(d){ return y(10**tracks[i].log_L[d])})
+                    .attr("dy", "0.75em")
+                    .attr("class", "text-track")
+                    .attr("transform", "translate(3,-5)")
+                    .html("Beginning");
+                g.append("text")
+                    .datum([tracks[i].log_Teff.length-1])
+                    .attr("x", function(d){ return x(10**tracks[i].log_Teff[d])})
+                    .attr("y", function(d){ return y(10**tracks[i].log_L[d])})
+                    .attr("dy", "0.75em")
+                    .attr("class", "text-track")
+                    .attr("transform", "translate(-10,8)")
+                    .html("End");
+                g.selectAll(".text-track").attr("opacity", 0);
+
+                /*g.append("ellipse")
+                    .attr("class", "ellipse")
+                    .attr("cx", 210)
+                    .attr("cy", 500)
+                    .attr("rx", 30)
+                    .attr("ry", 350)
+                    .attr("transform", "rotate(-33)")
+                    .attr("fill", 'red')
+                    .attr("opacity", 0.5)*/
+            }
+        }
 
 
         /* Track */
 
+        x.domain([10**3.9, 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
+        y.domain([10**(-1.5), 10**(d3.extent(evolution.log_L)[1] + 0.2)]);
         line.x(function (d) {
                 return x(10**evolution.log_Teff[d])
             })
@@ -368,10 +427,11 @@ var scrollVis = function (evolution, description, stars, indices) {
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
         activateFunctions[9] = function() {setBackgroundBlack(); hidePlot();};
-        activateFunctions[10] = function() {setBackgroundBlack(); showPlot();};
-        activateFunctions[11] = function() {setBackgroundBlack();};
-        activateFunctions[12] = function() {setBackgroundBlack(); hideSlider();};
-        activateFunctions[13] = function() {setBackgroundBlack(); showSlider(); hideStar();};
+        activateFunctions[10] = function() {setBackgroundBlack(); showPlot(); hideExampleTrack(); hideTrackText();};
+        activateFunctions[11] = function() {setBackgroundBlack(); hideTracks(); showExampleTrack(); showTrackText();};
+        activateFunctions[12] = function() {setBackgroundBlack(); hideSlider(); hidePlotText(); hideStar();
+                                            hideTrackText(); showTracks();};
+        activateFunctions[13] = function() {setBackgroundBlack(); hideTracks(); showSlider(); showPlotText(); showStar();};
 
         for (i = 14; i < 20; i++){
             updateFunctions[i] = evolveHR;
@@ -407,12 +467,50 @@ var scrollVis = function (evolution, description, stars, indices) {
 
     function showPlot() {
         showAxis();
-        showPlotText();
     }
 
     function hidePlot() {
         hideAxis();
-        hidePlotText();
+    }
+
+    function showTracks() {
+        x.domain([10**5.7, 10**3.2]);
+        y.domain([10**(-2.3), 10**6.5]);
+        g.selectAll(".axis--x")
+            .transition().duration(transition_duration)
+            .call(d3.axisBottom(x).tickValues([2000, 4000, 10000, 20000, 40000, 100000, 200000]).tickFormat(d3.format("")));
+        g.selectAll(".axis--y")
+            .transition().duration(transition_duration)
+            .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
+        g.selectAll(".tracks").transition().duration(transition_duration)
+            .attr("opacity", 1);
+    }
+
+    function hideTracks() {
+        g.selectAll(".tracks").transition().duration(transition_duration)
+            .attr("opacity", 0);
+    }
+
+    function showExampleTrack() {
+        g.select("#stellar-track-4").transition().duration(transition_duration)
+            .attr("opacity", 1);
+    }
+
+    function showTrackText() {
+        g.selectAll(".text-track")
+            .transition().duration(transition_duration)
+            .attr("opacity", 1)
+    }
+
+    function hideTrackText() {
+        g.selectAll(".text-track")
+            .transition().duration(transition_duration)
+            .attr("opacity", 0)
+    }
+
+    function hideExampleTrack(){
+        g.select("#stellar-track-4").transition().duration(transition_duration)
+            .attr("opacity", 0);
     }
 
     function showSlider() {
@@ -440,13 +538,33 @@ var scrollVis = function (evolution, description, stars, indices) {
     function showAxis() {
         g.selectAll(".axis")
             .transition().duration(transition_duration)
-            .attr("opacity", 1)
+            .attr("opacity", 1);
+        g.selectAll(".text-axis")
+            .transition().duration(transition_duration)
+            .attr("opacity", 1);
     }
 
     function hideAxis() {
         g.selectAll(".axis")
             .transition().duration(transition_duration)
-            .attr("opacity", 0)
+            .attr("opacity", 0);
+        g.selectAll(".text-axis")
+            .transition().duration(transition_duration)
+            .attr("opacity", 0);
+    }
+
+    function showStar(){
+        x.domain([10**3.9, 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
+        y.domain([10**(-1.5), 10**(d3.extent(evolution.log_L)[1] + 0.2)]);
+        g.selectAll(".axis--x")
+            .transition().duration(transition_duration)
+            .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+        g.selectAll(".axis--y")
+            .transition().duration(transition_duration)
+            .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
+        g.selectAll(".dot")
+            .transition().duration(transition_duration)
+            .attr("opacity", 1)
     }
 
     function hideStar(){
@@ -650,13 +768,19 @@ var scrollVis = function (evolution, description, stars, indices) {
     return chart;
 };
 
-function initVis(error, evolution, description, stars){
+function initVis(error, evolution, description, stars, tracks){
 
     $(document).ready(function(){
         $(this).scrollTop(0);
     });
 
-    console.log(description)
+    var tracks_length = [];
+
+    console.log(tracks[0]);
+    for(var i in Object.keys(tracks)){
+        tracks_length.push(tracks[i].log_Teff.length);
+    }
+    console.log(tracks_length)
 
     // Fix AGB for phase=5
     evolution.phase.forEach(function(d, i){
@@ -682,7 +806,8 @@ function initVis(error, evolution, description, stars){
             indices.push([])
         }
     }
-    var plot = scrollVis(evolution, description, stars, indices);
+
+    var plot = scrollVis(evolution, description, stars, tracks, indices);
 
     d3.select('#vis')
         .datum(evolution)
@@ -715,4 +840,5 @@ queue()
     .defer(d3.json, "data/00140M_evol_track.json")
     .defer(d3.json, "data/description.json")
     .defer(d3.csv, "data/stars.csv")
+    .defer(d3.json, "data/tracks.json")
     .await(initVis);
