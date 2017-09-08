@@ -415,7 +415,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
 
     var setupSections = function () {
 
-        for (var i = 0; i < 21; i++) {
+        for (var i = 0; i < 22; i++) {
             activateFunctions[i] = setBackgroundBlack;
             updateFunctions[i] = function () {};
         }
@@ -429,11 +429,12 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         activateFunctions[9] = function() {setBackgroundBlack(); hidePlot();};
         activateFunctions[10] = function() {setBackgroundBlack(); showPlot(); hideExampleTrack(); hideTrackText();};
         activateFunctions[11] = function() {setBackgroundBlack(); hideTracks(); showExampleTrack(); showTrackText();};
-        activateFunctions[12] = function() {setBackgroundBlack(); hideSlider(); hidePlotText(); hideStar();
-                                            hideTrackText(); showTracks();};
-        activateFunctions[13] = function() {setBackgroundBlack(); hideTracks(); showSlider(); showPlotText(); showStar();};
+        activateFunctions[12] = function() {setBackgroundBlack(); hideTrackText(); showPlot(); showTracks();};
+        activateFunctions[13] = function() {setBackgroundBlack(); hideTracks(); hideTrackText(); hidePlot();
+                                            hideSlider(); hidePlotText(); hideStar();};
+        activateFunctions[14] = function() {setBackgroundBlack(); showPlot(); showSlider(); showPlotText(); showStar();};
 
-        for (i = 14; i < 20; i++){
+        for (i = 15; i < 21; i++){
             updateFunctions[i] = evolveHR;
         }
 
@@ -537,7 +538,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
 
     function showAxis() {
         g.selectAll(".axis")
-            .transition().duration(transition_duration)
+            //.transition().duration(transition_duration)
             .attr("opacity", 1);
         g.selectAll(".text-axis")
             .transition().duration(transition_duration)
@@ -546,7 +547,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
 
     function hideAxis() {
         g.selectAll(".axis")
-            .transition().duration(transition_duration)
+            //.transition().duration(transition_duration)
             .attr("opacity", 0);
         g.selectAll(".text-axis")
             .transition().duration(transition_duration)
