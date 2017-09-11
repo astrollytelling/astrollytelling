@@ -12,7 +12,13 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         line = d3.line(),
         scrollScale = d3.scaleLinear().domain([0, 1]);
 
-    var colorTemp = function (d) {
+
+    var colorMass = function(d) {
+        var value = (80 - d) / (80 - 0.3);
+        return d3.rgb(d3.interpolateSpectral(value)).brighter(1);
+    };
+
+    var colorTemp = function(d) {
         var value = (d - d3.extent(evolution.log_Teff)[1]) / (d3.extent(evolution.log_Teff)[1] - d3.extent(evolution.log_Teff)[0] - 0.1);
         return d3.interpolateRdYlBu(1 + value);
     };
@@ -95,6 +101,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
 
         slider.append("line")
             .attr("class", "track")
+            .attr("stroke", "#ddd")
             .attr("x1", xSlider.range()[0])
             .attr("x2", xSlider.range()[1]);
         slider.append("g")
@@ -200,7 +207,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
                 .attr("class", "tracks")
                 .attr("id", "stellar-track-"+i)
                 .attr("fill", "none")
-                .attr("stroke", "gray")
+                .attr("stroke", colorMass(tracks[i].initial_mass))
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", 1.5)

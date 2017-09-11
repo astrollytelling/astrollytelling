@@ -235,15 +235,6 @@ body{
 
 /* Slider */
 
-
-.track ,
-.tracks {
-  stroke-linecap: round;
-  stroke: #ddd;
-  stroke-opacity: 0.7;
-  stroke-width: 1px;
-}
-
 .track-ticks {
   stroke: #ddd;
   stroke-opacity: 0.7;
