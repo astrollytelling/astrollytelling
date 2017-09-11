@@ -373,6 +373,8 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         activateFunctions[13] = function() {setBackgroundBlack(); hideTracks(); hideTrackText(); hideAxis();
                                             hideSlider(); hidePlotText(); hideStar();};
         activateFunctions[14] = function() {setBackgroundBlack(); showSlider(); showPlotText(); showStar(); showAxis();};
+        activateFunctions[20] = function() {setBackgroundBlack(); showSlider(); showPlotText(); showStar(); showAxis();};
+        activateFunctions[21] = function() {setBackgroundBlack(); hideSlider(); hidePlotText(); hideStar(); hideAxis();};
 
         for (i = 15; i < 21; i++){
             updateFunctions[i] = evolveHR;
@@ -515,6 +517,16 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         g.selectAll(".stellar-track")
             .transition().duration(transition_duration)
             .attr("opacity", 0)
+    }
+
+    function hideEverything() {
+        hideAxis();
+        hideExampleTrack();
+        hideTrackText();
+        hideTracks();
+        hideSlider();
+        hidePlotText();
+        hideStar();
     }
 
     function evolveHR(progress, idx) {

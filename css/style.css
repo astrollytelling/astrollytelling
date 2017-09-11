@@ -73,7 +73,7 @@ body{
   text-align: center;
   top: 40vh;
   color: #ddd;
-  z-index: 100;
+  z-index: 200;
 }
 #title-viz a{
   color: #63d4ff;
@@ -125,47 +125,15 @@ body{
 
 }
 
-nav {
-  width:5vw;
-  padding:0;
-  display: none;
-}
-
-nav.stick {
-  position: fixed;
-  top: 35vh;
-  z-index: 10000;
-  margin-left: -10vw;
-  display: block;
-}
-
-nav ul {
-  list-style-type:none;
-  margin-left: 10px;
-  padding:0;
-}
-
-nav ul li{
-  padding: 5px 0px 0px 0px;
-}
-
-a.nav-active {
-  color: white;
-  background: rgba(255, 255, 255, 0.7);
-}
-
 #graphic {
   padding-top: 20px;
 }
-
 
 #sections {
   position: relative;
   display: inline-block;
   width: 80vw;
-  /*top: 0px;*/
-  z-index: 90;
-  /*padding-bottom: 200px;*/
+  z-index: 150;
 }
 
 .step {
@@ -200,6 +168,10 @@ a.nav-active {
 
 .step.last{
   height: 50vw;
+}
+
+.step.last a{
+  color: #63d4ff;
 }
 
 #sections .title {
