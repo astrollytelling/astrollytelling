@@ -13,9 +13,10 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         scrollScale = d3.scaleLinear().domain([0, 1]);
 
 
-    var colorMass = function(d) {
-        var value = (80 - d) / (80 - 0.3);
-        return d3.rgb(d3.interpolateSpectral(value)).brighter(1);
+    var colorMass = function(i) {
+        //var value = (80 - d) / (80 - 0.3);
+        //return d3.rgb(d3.interpolateSpectral(1-value)).brighter(1);
+        return d3.rgb(d3.schemeSpectral[10][i]).brighter(1)
     };
 
     var colorTemp = function(d) {
@@ -207,7 +208,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
                 .attr("class", "tracks")
                 .attr("id", "stellar-track-"+i)
                 .attr("fill", "none")
-                .attr("stroke", colorMass(tracks[i].initial_mass))
+                .attr("stroke", colorMass(i))
                 .attr("stroke-linejoin", "round")
                 .attr("stroke-linecap", "round")
                 .attr("stroke-width", 1.5)
@@ -373,6 +374,7 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
         activateFunctions[3] = function() {changeBackgroundImage("img/img2b_large.jpg");};
         activateFunctions[4] = function() {changeBackgroundImage("img/img3a_large.jpg");};
         activateFunctions[5] = function() {changeBackgroundImage("img/img3b_large.jpg");};
+        activateFunctions[6] = function() {changeBackgroundImage("img/img4_large.jpg");};
         activateFunctions[9] = function() {setBackgroundBlack(); hideAxis();};
         activateFunctions[10] = function() {setBackgroundBlack(); showAxis(); hideExampleTrack(); hideTrackText();};
         activateFunctions[11] = function() {setBackgroundBlack(); hideTracks(); showExampleTrack(); showTrackText();};
@@ -390,11 +392,11 @@ var scrollVis = function (evolution, description, stars, tracks, indices) {
     };
 
     var showTitle = function() {
-        $("#title-viz").animate({opacity: 1}, transition_duration);
+        $("#title-viz").animate({opacity: 1, "z-index": 200}, transition_duration);
     };
 
     var hideTitle = function() {
-        $("#title-viz").animate({opacity: 0}, transition_duration);
+        $("#title-viz").animate({opacity:0, "z-index": 0}, transition_duration);
     };
 
     var setBackgroundBlack = function() {

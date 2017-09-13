@@ -133,7 +133,7 @@ body{
   position: relative;
   display: inline-block;
   width: 80vw;
-  z-index: 150;
+  z-index: 100;
 }
 
 .step {
@@ -174,7 +174,8 @@ body{
   color: #63d4ff;
 }
 
-#sections .title {
+#sections .title,
+#extra-space .title {
   font-family: 'Exo 2', Arial, Helvetica, sans-serif;
   font-size: 20px;
   font-weight: bold;
@@ -185,13 +186,15 @@ body{
 }
 
 #extra-space {
+  position: relative;
   height: 300px;
+  z-index: 300;
 }
 
 #vis {
   display: inline-block;
   position: fixed;
-  z-index: 100;
+  z-index: 150;
   margin-left: 0;
   left:40vw;
 }
