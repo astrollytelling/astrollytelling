@@ -1,8 +1,7 @@
-# Stellar Evolution
+# Astrollytelling: Astronomy + Scrollytelling
+### A visualization project by Fernando Becerra and Jieun Choi.
 
-A visualization by Fernando Becerra and Jieun Choi.
+Astrollytelling is a initiative of Fernando Becerra with the objective of bringing together astronomy and scrollytelling. Scrollytelling, and storytelling in general, has gained huge popularity in the last years, specially in journalism. It is used as a way to tell visual stories step by step by just simply scrolling down a webpage. In this project we have adapted this technique to explain basic astronomy concepts and ideas. Originally aimed to undergrad and grad students, this visualization tool is also useful for any astronomy enthusiast who want to learn more about the science we do.
 
-To run this project locally, enter the following command on the terminal:
-```python -m SimpleHTTPServer 8000```
-
-Then go to `localhost:8000` in your favorite web browser and navigate to this folder. You can use any port number, not necessarily 8000.
+Webpage: astrollytellling.io
+Contact: astrollytelling@gmail.com
