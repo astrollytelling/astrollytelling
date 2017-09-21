@@ -1,7 +1,9 @@
 var div = d3.select(".viz");
 
 var width = window.innerWidth,
-    height = window.innerHeight;
+    height = window.innerHeight,
+    center = [width / 2, height / 2];
+
 
 var canvas = div.append("canvas")
     .attr("width", width)
@@ -112,6 +114,35 @@ d3.json("data/stars.json", function(stars){
 
     draw(geoConstellations, [ra, dec]);
 
+    var setDimensions = function () {
+
+        width = window.innerWidth;
+        height = window.innerHeight;
+        center = [width / 2, height / 2];
+
+        canvas
+            .attr("width", width)
+            .attr("height", height);
+
+        scaledWidth = width * ratio;
+        scaledHeight = height * ratio;
+
+        canvas.node().width = scaledWidth;
+        canvas.node().height = scaledHeight;
+        canvas
+            .style("width", width + 'px')
+            .style("height", height + 'px');
+
+        context.scale(ratio, ratio);
+
+        path.context(context);
+
+        draw(geoConstellations, [ra, dec]);
+
+    };
+
+    window.onresize = setDimensions;
+
 });
 
 
@@ -125,7 +156,6 @@ function makeRadialGradient(x, y, r, color) {
 }
 
 function distance(p) {
-    var center = [width / 2, height / 2];
     var xRotate = center[0] - p[0];
     var yRotate = center[1] - p[1];
 
