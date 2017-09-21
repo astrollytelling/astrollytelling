@@ -141,7 +141,7 @@ a {
   .btn-circle:focus, .btn-circle:hover {
     color: white;
     outline: none;
-    background: rgba(37, 37, 37, 0.81); }
+    background-color: rgba(11, 26, 35, 0.8); }
 
 .img-item {
   margin-bottom: 50px;
