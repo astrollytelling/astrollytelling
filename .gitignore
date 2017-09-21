@@ -5,4 +5,4 @@
 # Webstorm stuff
 .idea/
 
-./img/home/*.ai
+img/home/*.ai
