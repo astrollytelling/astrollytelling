@@ -71,7 +71,7 @@ body{
   position: fixed;
   width: 100vw;
   text-align: center;
-  top: 40vh;
+  top: 35vh;
   color: #ddd;
   z-index: 200;
 }
