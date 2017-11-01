@@ -35,7 +35,8 @@ var scrollVis = function (evolution, description, tracks, indices) {
         n_phases = phases.length,
         step_height = $(".step").height(),
         xSlider = d3.scaleLinear().range([0, widthSlider - 2 * radiusSlider])
-            .domain([0, n_phases * step_height]).clamp(true);
+            .domain([0, n_phases * step_height]).clamp(true),
+        tick_values;
 
     /* Tooltip */
 
@@ -223,6 +224,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
                     .attr("y", function(d){ return y(10**tracks[i].log_L[d])})
                     .attr("dy", "0.75em")
                     .attr("class", "text-track")
+                    .attr("id", "text-track-beginning")
                     .attr("transform", "translate(3,-5)")
                     .html("Beginning");
                 g.append("text")
@@ -231,6 +233,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
                     .attr("y", function(d){ return y(10**tracks[i].log_L[d])})
                     .attr("dy", "0.75em")
                     .attr("class", "text-track")
+                    .attr("id", "text-track-end")
                     .attr("transform", "translate(-10,8)")
                     .html("End");
                 g.selectAll(".text-track").attr("opacity", 0);
@@ -244,6 +247,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
                     .attr("y", function(d){ return y(10**tracks[i].log_L[d])})
                     .attr("dy", "0.75em")
                     .attr("class", "text-tracks")
+                    .attr("id", "text-track-low-mass")
                     .attr("transform", "translate(-100, 10)")
                     .html("Low-mass star");
                 g.selectAll(".text-tracks").attr("opacity", 0);
@@ -256,6 +260,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
                     .attr("y", function(d){ return y(10**tracks[i].log_L[d])})
                     .attr("dy", "0.75em")
                     .attr("class", "text-tracks")
+                    .attr("id", "text-track-high-mass")
                     .attr("transform", "translate(0, 20)")
                     .html("High-mass star");
                 g.selectAll(".text-tracks").attr("opacity", 0);
@@ -435,11 +440,12 @@ var scrollVis = function (evolution, description, tracks, indices) {
     };
 
     function showTracks() {
+        tick_values = [2000, 4000, 10000, 20000, 40000, 100000, 200000]
         x.domain([10**5.7, 10**3.2]);
         y.domain([10**(-2.3), 10**6.5]);
         g.selectAll(".axis--x")
             .transition().duration(transition_duration)
-            .call(d3.axisBottom(x).tickValues([2000, 4000, 10000, 20000, 40000, 100000, 200000]).tickFormat(d3.format("")));
+            .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));
         g.selectAll(".axis--y")
             .transition().duration(transition_duration)
             .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
@@ -466,7 +472,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
 
 
     function showExampleTrack() {
-        g.select("#stellar-track-4").transition().duration(transition_duration)
+        g.selectAll("#stellar-track-4").transition().duration(transition_duration)
             .attr("opacity", 1);
     }
 
@@ -483,7 +489,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
     }
 
     function hideExampleTrack(){
-        g.select("#stellar-track-4").transition().duration(transition_duration)
+        g.selectAll("#stellar-track-4").transition().duration(transition_duration)
             .attr("opacity", 0);
     }
 
@@ -528,11 +534,12 @@ var scrollVis = function (evolution, description, tracks, indices) {
     }
 
     function showStar(){
+        tick_values = [3000, 4000, 5000, 6000, 7000]
         x.domain([10**3.9, 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
         y.domain([10**(-1.5), 10**(d3.extent(evolution.log_L)[1] + 0.2)]);
         g.selectAll(".axis--x")
             .transition().duration(transition_duration)
-            .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+            .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));
         g.selectAll(".axis--y")
             .transition().duration(transition_duration)
             .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
@@ -579,14 +586,16 @@ var scrollVis = function (evolution, description, tracks, indices) {
         var idx_this_phase = _.indexOf(phases, phase);
 
         if (phase == 6) {
+            tick_values = [3000, 5000, 10000, 30000, 50000, 100000];
             x.domain([10**(Math.max(evolution.log_Teff[this_idx], 3.8, d3.extent(evolution.log_Teff.slice(0, this_idx))[1]) + 0.1),
                 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
             g.selectAll(".axis--x")
-                .call(d3.axisBottom(x).tickValues([3000, 5000, 10000, 30000, 50000, 100000]).tickFormat(d3.format("")));
+                .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));
         } else {
+            tick_values = [3000, 4000, 5000, 6000, 7000]
             x.domain([10**(3.9), 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
             g.selectAll(".axis--x")
-                .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+                .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));
         }
 
         line.x(function (d) {
@@ -685,7 +694,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
 
         g.selectAll(".axis--x")
             .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x).tickValues([3000, 4000, 5000, 6000, 7000]).tickFormat(d3.format("")));
+            .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));
 
         g.selectAll(".axis--y")
             .call(d3.axisLeft(y).ticks(5).tickFormat(d3.format("")));
@@ -699,6 +708,9 @@ var scrollVis = function (evolution, description, tracks, indices) {
 
         g.selectAll(".text-age")
             .attr("y", height);
+
+        x.domain([10**3.9, 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
+        y.domain([10**(-1.5), 10**(d3.extent(evolution.log_L)[1] + 0.2)]);
 
         g.selectAll(".dot")
             .attr("cx", function (d) {
@@ -717,6 +729,46 @@ var scrollVis = function (evolution, description, tracks, indices) {
 
         g.selectAll(".stellar-track")
             .attr("d", line);
+
+        x.domain([10**5.7, 10**3.2]);
+        y.domain([10**(-2.3), 10**6.5]);
+
+        for(var i in Object.keys(tracks)) {
+            line.x(function (d) {
+                    return x(10**tracks[i].log_Teff[d])
+                })
+                .y(function (d) {
+                    return y(10**tracks[i].log_L[d])
+                });
+
+            g.selectAll("#stellar-track-"+i)
+                .attr("d", line);
+
+            if (i == '4'){
+                g.selectAll("#text-track-beginning")
+                    .datum([0])
+                    .attr("x", function(d){ return x(10**tracks[i].log_Teff[d])})
+                    .attr("y", function(d){ return y(10**tracks[i].log_L[d])});
+                g.selectAll("#text-track-end")
+                    .datum([tracks[i].log_Teff.length-1])
+                    .attr("x", function(d){ return x(10**tracks[i].log_Teff[d])})
+                    .attr("y", function(d){ return y(10**tracks[i].log_L[d])});
+            }
+
+            if (i == '0'){
+                g.selectAll("#text-track-low-mass")
+                    .datum([tracks[i].log_Teff.length-1])
+                    .attr("x", function(d){ return x(10**tracks[i].log_Teff[d])})
+                    .attr("y", function(d){ return y(10**tracks[i].log_L[d])});
+            }
+
+            if (i == '9'){
+                g.selectAll("#text-track-high-mass")
+                    .datum([tracks[i].log_Teff.length-1])
+                    .attr("x", function(d){ return x(10**tracks[i].log_Teff[d])})
+                    .attr("y", function(d){ return y(10**tracks[i].log_L[d])});
+            }
+        }
 
         // Slider
 
