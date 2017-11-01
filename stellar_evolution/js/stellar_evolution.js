@@ -135,7 +135,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
             })
             .on("click", function(){ $('html,body').scrollTo("#"+$(this).text(), "#"+$(this).text())})
             .on("mouseover", function() { d3.select(this).style("cursor", "pointer"); })
-            .on("mouseout", function(d) { d3.select(this).style("cursor", "default"); });
+            .on("mouseout", function() { d3.select(this).style("cursor", "default"); });
 
 
         var handle = slider.insert("circle", ".track-overlay")
@@ -440,7 +440,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
     };
 
     function showTracks() {
-        tick_values = [2000, 4000, 10000, 20000, 40000, 100000, 200000]
+        tick_values = [2000, 4000, 10000, 20000, 40000, 100000, 200000];
         x.domain([10**5.7, 10**3.2]);
         y.domain([10**(-2.3), 10**6.5]);
         g.selectAll(".axis--x")
@@ -534,7 +534,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
     }
 
     function showStar(){
-        tick_values = [3000, 4000, 5000, 6000, 7000]
+        tick_values = [3000, 4000, 5000, 6000, 7000];
         x.domain([10**3.9, 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
         y.domain([10**(-1.5), 10**(d3.extent(evolution.log_L)[1] + 0.2)]);
         g.selectAll(".axis--x")
@@ -592,7 +592,7 @@ var scrollVis = function (evolution, description, tracks, indices) {
             g.selectAll(".axis--x")
                 .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));
         } else {
-            tick_values = [3000, 4000, 5000, 6000, 7000]
+            tick_values = [3000, 4000, 5000, 6000, 7000];
             x.domain([10**(3.9), 10**(d3.extent(evolution.log_Teff)[0] - 0.1)]);
             g.selectAll(".axis--x")
                 .call(d3.axisBottom(x).tickValues(tick_values).tickFormat(d3.format("")));

@@ -76,7 +76,7 @@ body{
   z-index: 200;
 }
 #title-viz a{
-  color: #63d4ff;
+  color: #63b2ff;
 }
 
 #title h1{
@@ -171,8 +171,12 @@ body{
 }
 
 .step.last a{
-  color: #63d4ff;
+  color: #1984c9;
 }
+
+.step.last a:focus, a:hover{
+  text-decoration: none;
+  color: #19a4ec; }
 
 #sections .title,
 #extra-space .title {
